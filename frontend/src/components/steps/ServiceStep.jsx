@@ -79,9 +79,18 @@ export default function ServiceStep({ selected, onSelect }) {
                   >
                     <ContentCutRoundedIcon sx={{ fontSize: 21, color: 'secondary.main' }} />
                   </Box>
-                  <Typography variant="h6" color="secondary.main" sx={{ fontWeight: 700 }}>
-                    {formatCurrency(service.price)}
-                  </Typography>
+                  <Box sx={{ textAlign: 'right' }}>
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
+                      sx={{ display: 'block', lineHeight: 1.2 }}
+                    >
+                      A partir de
+                    </Typography>
+                    <Typography variant="h6" color="secondary.main" sx={{ fontWeight: 700 }}>
+                      {formatCurrency(service.price)}
+                    </Typography>
+                  </Box>
                 </Stack>
                 <Typography variant="h6" sx={{ mb: 1.5 }}>
                   {service.name}
