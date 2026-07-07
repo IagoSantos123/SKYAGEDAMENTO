@@ -1,33 +1,60 @@
-import { Box, Grid, Stack, Typography } from '@mui/material'
+import { useEffect, useState } from 'react'
+import { Alert, Box, CircularProgress, Grid, Stack, Typography } from '@mui/material'
 import ScheduleRoundedIcon from '@mui/icons-material/ScheduleRounded'
 import ContentCutRoundedIcon from '@mui/icons-material/ContentCutRounded'
-import FaceRetouchingNaturalRoundedIcon from '@mui/icons-material/FaceRetouchingNaturalRounded'
-import FaceRoundedIcon from '@mui/icons-material/FaceRounded'
-import BrushRoundedIcon from '@mui/icons-material/BrushRounded'
-import { services } from '../../mocks/services'
+import { getServices } from '../../services/bookingApi'
 import { MESSAGES } from '../../constants/messages'
 import { formatCurrency } from '../../utils/formatters'
 import ReceptionistMessage from '../common/ReceptionistMessage'
 import SelectableCard from '../common/SelectableCard'
 
-const SERVICE_ICONS = {
-  'serv-1': ContentCutRoundedIcon,
-  'serv-2': FaceRetouchingNaturalRoundedIcon,
-  'serv-3': FaceRoundedIcon,
-  'serv-4': BrushRoundedIcon,
-}
-
 export default function ServiceStep({ selected, onSelect }) {
+  const [services, setServices] = useState([])
+  const [status, setStatus] = useState('loading') // loading | ready | error
+
+  useEffect(() => {
+    let active = true
+    getServices()
+      .then((data) => {
+        if (!active) return
+        setServices(data)
+        setStatus('ready')
+      })
+      .catch(() => {
+        if (!active) return
+        setStatus('error')
+      })
+    return () => {
+      active = false
+    }
+  }, [])
+
   return (
     <Box>
       <ReceptionistMessage
         title={MESSAGES.servicePraise}
         subtitle={MESSAGES.servicePrompt}
       />
-      <Grid container spacing={2.5}>
-        {services.map((service) => {
-          const ServiceIcon = SERVICE_ICONS[service.id] ?? ContentCutRoundedIcon
-          return (
+
+      {status === 'loading' && (
+        <Stack spacing={2} sx={{ alignItems: 'center', py: 5 }}>
+          <CircularProgress color="secondary" />
+        </Stack>
+      )}
+
+      {status === 'error' && (
+        <Alert severity="error">
+          Não foi possível carregar os serviços agora. Tente novamente em instantes.
+        </Alert>
+      )}
+
+      {status === 'ready' && services.length === 0 && (
+        <Alert severity="info">Nenhum serviço disponível para agendamento no momento.</Alert>
+      )}
+
+      {status === 'ready' && services.length > 0 && (
+        <Grid container spacing={2.5}>
+          {services.map((service) => (
             <Grid size={{ xs: 12, sm: 6 }} key={service.id}>
               <SelectableCard
                 selected={selected?.id === service.id}
@@ -50,19 +77,14 @@ export default function ServiceStep({ selected, onSelect }) {
                       mb: 1.5,
                     }}
                   >
-                    <ServiceIcon sx={{ fontSize: 21, color: 'secondary.main' }} />
+                    <ContentCutRoundedIcon sx={{ fontSize: 21, color: 'secondary.main' }} />
                   </Box>
-                  <Typography
-                    variant="h6"
-                    color="secondary.main"
-                    sx={{ fontWeight: 700 }}
-                  >
+                  <Typography variant="h6" color="secondary.main" sx={{ fontWeight: 700 }}>
                     {formatCurrency(service.price)}
                   </Typography>
                 </Stack>
-                <Typography variant="h6">{service.name}</Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5, mb: 1.5 }}>
-                  {service.description}
+                <Typography variant="h6" sx={{ mb: 1.5 }}>
+                  {service.name}
                 </Typography>
                 <Stack direction="row" spacing={0.75} sx={{ alignItems: 'center' }}>
                   <ScheduleRoundedIcon sx={{ fontSize: 17, color: 'text.disabled' }} />
@@ -72,9 +94,9 @@ export default function ServiceStep({ selected, onSelect }) {
                 </Stack>
               </SelectableCard>
             </Grid>
-          )
-        })}
-      </Grid>
+          ))}
+        </Grid>
+      )}
     </Box>
   )
 }

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import {
+  Alert,
   Avatar,
   Box,
   Button,
@@ -16,14 +17,12 @@ import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import { MESSAGES } from '../../constants/messages'
 import { phoneLookupSchema } from '../../validations/phoneLookupSchema'
-import { findClientByPhone } from '../../mocks/clients'
+import { lookupClientByPhone } from '../../services/bookingApi'
 import ReceptionistMessage from '../common/ReceptionistMessage'
 import PhoneMaskField from '../common/PhoneMaskField'
 
-const SEARCH_DELAY_MS = 900
-
 export default function ExistingClientStep({ onConfirm, onNotFound }) {
-  const [status, setStatus] = useState('input') // input | searching | found | not_found
+  const [status, setStatus] = useState('input') // input | searching | found | not_found | error
   const [foundClient, setFoundClient] = useState(null)
 
   const { control, handleSubmit } = useForm({
@@ -31,17 +30,19 @@ export default function ExistingClientStep({ onConfirm, onNotFound }) {
     defaultValues: { phone: '' },
   })
 
-  const onSearch = ({ phone }) => {
+  const onSearch = async ({ phone }) => {
     setStatus('searching')
-    setTimeout(() => {
-      const client = findClientByPhone(phone)
+    try {
+      const client = await lookupClientByPhone(phone)
       if (client) {
         setFoundClient(client)
         setStatus('found')
       } else {
         setStatus('not_found')
       }
-    }, SEARCH_DELAY_MS)
+    } catch {
+      setStatus('error')
+    }
   }
 
   return (
@@ -144,6 +145,19 @@ export default function ExistingClientStep({ onConfirm, onNotFound }) {
             </Stack>
             <Button variant="contained" color="secondary" fullWidth onClick={onNotFound}>
               Criar meu cadastro
+            </Button>
+          </Box>
+        </Fade>
+      )}
+
+      {status === 'error' && (
+        <Fade in>
+          <Box>
+            <Alert severity="error" sx={{ mb: 3 }}>
+              Não foi possível buscar seu cadastro agora. Tente novamente.
+            </Alert>
+            <Button variant="contained" color="secondary" fullWidth onClick={() => setStatus('input')}>
+              Tentar novamente
             </Button>
           </Box>
         </Fade>

@@ -1,7 +1,9 @@
 import {
+  Alert,
   Avatar,
   Box,
   Button,
+  CircularProgress,
   Divider,
   Grid,
   Stack,
@@ -36,7 +38,7 @@ function SummaryRow({ icon, label, value }) {
   )
 }
 
-export default function SummaryStep({ bookingData, onConfirm }) {
+export default function SummaryStep({ bookingData, onConfirm, submitting, error }) {
   const { professional, service, date, time, notes, client } = bookingData
 
   return (
@@ -67,9 +69,17 @@ export default function SummaryStep({ bookingData, onConfirm }) {
       >
         <Stack direction="row" spacing={2} sx={{ alignItems: 'center', mb: 2.5 }}>
           <Avatar
-            src={professional?.avatar}
-            sx={{ width: 56, height: 56, border: '2px solid rgba(198,161,91,0.4)' }}
-          />
+            sx={{
+              width: 56,
+              height: 56,
+              bgcolor: professional?.color,
+              color: '#161104',
+              fontWeight: 700,
+              border: '2px solid rgba(198,161,91,0.4)',
+            }}
+          >
+            {professional?.name?.[0]?.toUpperCase()}
+          </Avatar>
           <Box>
             <Typography variant="h6" sx={{ color: '#fff' }}>
               {professional?.name}
@@ -121,15 +131,22 @@ export default function SummaryStep({ bookingData, onConfirm }) {
         </Grid>
       </Box>
 
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
+
       <Button
         variant="contained"
         color="secondary"
         size="large"
         fullWidth
-        startIcon={<ContentCutRoundedIcon />}
+        disabled={submitting}
+        startIcon={submitting ? <CircularProgress size={18} color="inherit" /> : <ContentCutRoundedIcon />}
         onClick={onConfirm}
       >
-        Confirmar Agendamento
+        {submitting ? 'Confirmando...' : 'Confirmar Agendamento'}
       </Button>
     </Box>
   )

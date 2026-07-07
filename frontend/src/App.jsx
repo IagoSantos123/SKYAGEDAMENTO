@@ -1,7 +1,9 @@
 import { useState } from 'react'
+import dayjs from 'dayjs'
 import { Box, Container } from '@mui/material'
 import { STEPS } from './constants/steps'
 import { useBookingFlow } from './hooks/useBookingFlow'
+import { createBooking } from './services/bookingApi'
 import BookingHeader from './components/layout/BookingHeader'
 import BookingCard from './components/layout/BookingCard'
 import StepTransition from './components/common/StepTransition'
@@ -20,13 +22,39 @@ import SummaryStep from './components/steps/SummaryStep'
 export default function App() {
   const flow = useBookingFlow()
   const [successOpen, setSuccessOpen] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState(null)
 
-  const handleConfirmBooking = () => {
-    setSuccessOpen(true)
+  const handleConfirmBooking = async () => {
+    const { professional, service, date, time, notes, client, clientType } = flow.bookingData
+
+    setSubmitError(null)
+    setSubmitting(true)
+    try {
+      await createBooking({
+        colaboradorId: professional?.id,
+        servicoId: service?.id,
+        servicoNome: service?.name,
+        data: dayjs(date).format('YYYY-MM-DD'),
+        horario: time,
+        clienteId: clientType === 'existing' ? client?.id : undefined,
+        clienteNome: client?.name,
+        clienteTelefone: client?.phone,
+        clienteEmail: client?.email || undefined,
+        clienteNascimento: client?.birthDate ? dayjs(client.birthDate).format('YYYY-MM-DD') : undefined,
+        observacao: notes || undefined,
+      })
+      setSuccessOpen(true)
+    } catch (error) {
+      setSubmitError(error.message)
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   const handleNewBooking = () => {
     setSuccessOpen(false)
+    setSubmitError(null)
     flow.restart()
   }
 
@@ -62,6 +90,8 @@ export default function App() {
       case STEPS.TIME:
         return (
           <TimeStep
+            professionalId={flow.bookingData.professional?.id}
+            serviceId={flow.bookingData.service?.id}
             date={flow.bookingData.date}
             selected={flow.bookingData.time}
             onSelect={flow.selectTime}
@@ -100,6 +130,8 @@ export default function App() {
           <SummaryStep
             bookingData={flow.bookingData}
             onConfirm={handleConfirmBooking}
+            submitting={submitting}
+            error={submitError}
           />
         )
 
