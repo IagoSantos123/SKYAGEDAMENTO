@@ -24,7 +24,7 @@ export default function BookingHeader() {
           variant="overline"
           sx={{ color: 'secondary.main', display: 'block', mb: 0.75 }}
         >
-          Sky Barbearia
+          Feran Studio
         </Typography>
         <Typography variant="h1" sx={{ fontSize: { xs: '1.9rem', sm: '2.4rem' } }}>
           Agendamento
