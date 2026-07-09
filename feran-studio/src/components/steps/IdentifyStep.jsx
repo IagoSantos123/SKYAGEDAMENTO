@@ -15,8 +15,8 @@ function IdentifyIcon({ icon: Icon }) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        bgcolor: 'rgba(198,161,91,0.1)',
-        border: '1px solid rgba(198,161,91,0.25)',
+        bgcolor: 'rgba(173,177,184,0.1)',
+        border: '1px solid rgba(173,177,184,0.25)',
       }}
     >
       <Icon sx={{ fontSize: 24, color: 'secondary.main' }} />

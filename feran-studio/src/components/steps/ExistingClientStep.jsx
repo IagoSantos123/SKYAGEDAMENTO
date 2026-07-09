@@ -83,7 +83,7 @@ export default function ExistingClientStep({ onConfirm, onNotFound }) {
           <Box>
             <Box
               sx={{
-                bgcolor: 'rgba(198,161,91,0.06)',
+                bgcolor: 'rgba(173,177,184,0.06)',
                 border: '1px solid',
                 borderColor: 'divider',
                 borderRadius: 4,
@@ -94,8 +94,8 @@ export default function ExistingClientStep({ onConfirm, onNotFound }) {
               <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
                 <Avatar
                   sx={{
-                    background: 'linear-gradient(150deg, #D9BC85 0%, #A3813F 100%)',
-                    color: '#161104',
+                    background: 'linear-gradient(150deg, #E7E9EC 0%, #7A7E85 100%)',
+                    color: '#0A0A0B',
                     width: 52,
                     height: 52,
                   }}

@@ -29,7 +29,7 @@ export default function ProgressBar({ value }) {
           bgcolor: 'rgba(255,255,255,0.08)',
           '& .MuiLinearProgress-bar': {
             borderRadius: 10,
-            background: 'linear-gradient(90deg, #A3813F, #D9BC85)',
+            background: 'linear-gradient(90deg, #7A7E85, #E7E9EC)',
           },
         }}
       />

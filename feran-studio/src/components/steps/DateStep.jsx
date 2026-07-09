@@ -28,14 +28,14 @@ function AvailabilityDay(props) {
         border: isToday ? '1.5px solid' : '1px solid transparent',
         borderColor: isToday ? 'secondary.main' : 'transparent',
         '&:hover': !unavailable
-          ? { bgcolor: 'rgba(198,161,91,0.14)' }
+          ? { bgcolor: 'rgba(173,177,184,0.14)' }
           : undefined,
         '&.Mui-selected': {
-          background: 'linear-gradient(150deg, #D9BC85 0%, #A3813F 100%)',
-          color: '#161104',
+          background: 'linear-gradient(150deg, #E7E9EC 0%, #7A7E85 100%)',
+          color: '#0A0A0B',
           fontWeight: 700,
           '&:hover': {
-            background: 'linear-gradient(150deg, #E4CC9C 0%, #A3813F 100%)',
+            background: 'linear-gradient(150deg, #E4CC9C 0%, #7A7E85 100%)',
           },
         },
       }}

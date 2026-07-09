@@ -14,9 +14,9 @@ export default function SelectableCard({ selected, onClick, children, sx }) {
         position: 'relative',
         borderColor: selected ? 'secondary.main' : 'divider',
         borderWidth: 1,
-        bgcolor: selected ? 'rgba(198,161,91,0.06)' : 'background.paper',
+        bgcolor: selected ? 'rgba(173,177,184,0.06)' : 'background.paper',
         boxShadow: selected
-          ? '0 16px 32px -14px rgba(198,161,91,0.35)'
+          ? '0 16px 32px -14px rgba(173,177,184,0.35)'
           : '0 2px 10px -4px rgba(0,0,0,0.3)',
         transform: selected ? 'translateY(-2px)' : 'none',
         height: '100%',

@@ -51,7 +51,7 @@ export default function SummaryStep({ bookingData, onConfirm, submitting, error 
           borderRadius: 4,
           p: 3,
           background: 'linear-gradient(160deg, #232325 0%, #141415 100%)',
-          border: '1px solid rgba(198,161,91,0.25)',
+          border: '1px solid rgba(173,177,184,0.25)',
           color: '#fff',
           mb: 3,
           overflow: 'hidden',
@@ -63,7 +63,7 @@ export default function SummaryStep({ bookingData, onConfirm, submitting, error 
             right: 0,
             height: '1px',
             background:
-              'linear-gradient(90deg, transparent, rgba(198,161,91,0.6), transparent)',
+              'linear-gradient(90deg, transparent, rgba(173,177,184,0.6), transparent)',
           },
         }}
       >
@@ -73,9 +73,9 @@ export default function SummaryStep({ bookingData, onConfirm, submitting, error 
               width: 56,
               height: 56,
               bgcolor: professional?.color,
-              color: '#161104',
+              color: '#0A0A0B',
               fontWeight: 700,
-              border: '2px solid rgba(198,161,91,0.4)',
+              border: '2px solid rgba(173,177,184,0.4)',
             }}
           >
             {professional?.name?.[0]?.toUpperCase()}
@@ -89,7 +89,7 @@ export default function SummaryStep({ bookingData, onConfirm, submitting, error 
             </Typography>
           </Box>
         </Stack>
-        <Divider sx={{ borderColor: 'rgba(198,161,91,0.2)', mb: 2.5 }} />
+        <Divider sx={{ borderColor: 'rgba(173,177,184,0.2)', mb: 2.5 }} />
         <Grid container spacing={2.5}>
           <SummaryRow
             icon={<EventRoundedIcon fontSize="small" />}

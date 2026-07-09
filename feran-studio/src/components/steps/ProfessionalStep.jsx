@@ -69,9 +69,9 @@ export default function ProfessionalStep({ selected, onSelect }) {
                         width: 56,
                         height: 56,
                         bgcolor: professional.color,
-                        color: '#161104',
+                        color: '#0A0A0B',
                         fontWeight: 700,
-                        border: '2px solid rgba(198,161,91,0.35)',
+                        border: '2px solid rgba(173,177,184,0.35)',
                       }}
                     >
                       {initials(professional.name)}

@@ -10,11 +10,11 @@ export default function ReceptionistMessage({ title, subtitle }) {
     <Stack direction="row" spacing={2} sx={{ alignItems: 'flex-start', mb: 3.5 }}>
       <Avatar
         sx={{
-          background: 'linear-gradient(150deg, #D9BC85 0%, #A3813F 100%)',
-          color: '#161104',
+          background: 'linear-gradient(150deg, #E7E9EC 0%, #7A7E85 100%)',
+          color: '#0A0A0B',
           width: 40,
           height: 40,
-          boxShadow: '0 6px 16px -4px rgba(198,161,91,0.5)',
+          boxShadow: '0 6px 16px -4px rgba(173,177,184,0.5)',
           flexShrink: 0,
         }}
       >

@@ -2,16 +2,16 @@ export const components = {
   MuiCssBaseline: {
     styleOverrides: {
       body: {
-        backgroundColor: '#0E0E0F',
+        backgroundColor: '#0A0A0C',
         backgroundImage:
-          'radial-gradient(circle at 12% -10%, rgba(198, 161, 91, 0.08) 0%, rgba(198, 161, 91, 0) 40%), radial-gradient(circle at 90% 110%, rgba(198, 161, 91, 0.05) 0%, rgba(198, 161, 91, 0) 45%), linear-gradient(180deg, #111113 0%, #0A0A0B 100%)',
+          'radial-gradient(circle at 12% -10%, rgba(173, 177, 184, 0.07) 0%, rgba(173, 177, 184, 0) 40%), radial-gradient(circle at 90% 110%, rgba(173, 177, 184, 0.05) 0%, rgba(173, 177, 184, 0) 45%), linear-gradient(180deg, #101113 0%, #060607 100%)',
         backgroundAttachment: 'fixed',
       },
       '*': {
         boxSizing: 'border-box',
       },
       '::selection': {
-        backgroundColor: 'rgba(198, 161, 91, 0.28)',
+        backgroundColor: 'rgba(173, 177, 184, 0.28)',
       },
     },
   },
@@ -21,7 +21,7 @@ export const components = {
     },
     styleOverrides: {
       root: {
-        borderRadius: 12,
+        borderRadius: 10,
         padding: '11px 26px',
         fontSize: '0.95rem',
         transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -29,32 +29,32 @@ export const components = {
       sizeLarge: {
         padding: '15px 32px',
         fontSize: '1rem',
-        borderRadius: 12,
+        borderRadius: 10,
       },
       containedPrimary: {
-        background: 'linear-gradient(135deg, #F5F3EE 0%, #E7E4DC 100%)',
-        color: '#111111',
+        background: 'linear-gradient(135deg, #EDEEF0 0%, #D7D9DC 100%)',
+        color: '#0A0A0B',
         boxShadow: '0 10px 28px -10px rgba(0, 0, 0, 0.6)',
         '&:hover': {
           boxShadow: '0 14px 32px -10px rgba(0, 0, 0, 0.7)',
           transform: 'translateY(-1px)',
-          background: 'linear-gradient(135deg, #FFFFFF 0%, #EFECE3 100%)',
+          background: 'linear-gradient(135deg, #FFFFFF 0%, #F2F3F5 100%)',
         },
       },
       containedSecondary: {
-        background: 'linear-gradient(135deg, #D9BC85 0%, #C6A15B 55%, #A3813F 100%)',
-        color: '#161104',
-        boxShadow: '0 10px 28px -10px rgba(198, 161, 91, 0.55)',
+        background: 'linear-gradient(135deg, #E7E9EC 0%, #ADB1B8 55%, #7A7E85 100%)',
+        color: '#0A0A0B',
+        boxShadow: '0 10px 28px -10px rgba(173, 177, 184, 0.45)',
         '&:hover': {
-          boxShadow: '0 14px 32px -10px rgba(198, 161, 91, 0.65)',
+          boxShadow: '0 14px 32px -10px rgba(173, 177, 184, 0.55)',
           transform: 'translateY(-1px)',
-          background: 'linear-gradient(135deg, #E4CC9C 0%, #D0AD6C 55%, #A3813F 100%)',
+          background: 'linear-gradient(135deg, #F2F3F5 0%, #BCBFC5 55%, #7A7E85 100%)',
         },
       },
       outlined: {
         borderWidth: 1,
         borderColor: 'rgba(255,255,255,0.16)',
-        color: '#F3F2EF',
+        color: '#F2F3F5',
         '&:hover': {
           borderWidth: 1,
           borderColor: 'rgba(255,255,255,0.3)',
@@ -62,10 +62,10 @@ export const components = {
         },
       },
       text: {
-        color: '#9B9A97',
+        color: '#9A9CA1',
         '&:hover': {
           background: 'rgba(255,255,255,0.05)',
-          color: '#F3F2EF',
+          color: '#F2F3F5',
         },
       },
     },
@@ -74,7 +74,7 @@ export const components = {
     styleOverrides: {
       root: {
         backgroundImage: 'none',
-        backgroundColor: '#1A1A1C',
+        backgroundColor: '#16171A',
       },
       rounded: {
         borderRadius: 24,
@@ -84,8 +84,8 @@ export const components = {
   MuiCard: {
     styleOverrides: {
       root: {
-        borderRadius: 18,
-        backgroundColor: '#1A1A1C',
+        borderRadius: 16,
+        backgroundColor: '#16171A',
         border: '1px solid rgba(255, 255, 255, 0.08)',
         transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
       },
@@ -94,10 +94,10 @@ export const components = {
   MuiCardActionArea: {
     styleOverrides: {
       root: {
-        borderRadius: 18,
+        borderRadius: 16,
         '& .MuiCardActionArea-focusHighlight': {
           background:
-            'linear-gradient(135deg, rgba(198,161,91,0.08), rgba(198,161,91,0.02))',
+            'linear-gradient(135deg, rgba(173,177,184,0.09), rgba(173,177,184,0.02))',
         },
         '&:hover .MuiCardActionArea-focusHighlight': {
           opacity: 1,
@@ -108,7 +108,7 @@ export const components = {
   MuiChip: {
     styleOverrides: {
       root: {
-        borderRadius: 8,
+        borderRadius: 6,
         fontWeight: 600,
       },
     },
@@ -121,9 +121,9 @@ export const components = {
   MuiInputLabel: {
     styleOverrides: {
       root: {
-        color: '#9B9A97',
+        color: '#9A9CA1',
         '&.Mui-focused': {
-          color: '#C6A15B',
+          color: '#ADB1B8',
         },
       },
     },
@@ -131,14 +131,14 @@ export const components = {
   MuiOutlinedInput: {
     styleOverrides: {
       root: {
-        borderRadius: 12,
+        borderRadius: 10,
         backgroundColor: 'rgba(255,255,255,0.02)',
         transition: 'all 0.2s ease',
         '&:hover .MuiOutlinedInput-notchedOutline': {
           borderColor: 'rgba(255,255,255,0.22)',
         },
         '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-          borderColor: '#C6A15B',
+          borderColor: '#ADB1B8',
           borderWidth: 1.5,
         },
       },
@@ -147,7 +147,7 @@ export const components = {
       },
       input: {
         '&::placeholder': {
-          color: '#5C5C5E',
+          color: '#54565B',
           opacity: 1,
         },
       },
@@ -157,10 +157,10 @@ export const components = {
     styleOverrides: {
       paper: {
         borderRadius: 24,
-        backgroundColor: '#1A1A1C',
+        backgroundColor: '#16171A',
         border: '1px solid rgba(255,255,255,0.08)',
         backgroundImage:
-          'radial-gradient(circle at 50% -20%, rgba(198,161,91,0.10) 0%, rgba(198,161,91,0) 50%)',
+          'radial-gradient(circle at 50% -20%, rgba(173,177,184,0.10) 0%, rgba(173,177,184,0) 50%)',
       },
     },
   },
@@ -181,7 +181,7 @@ export const components = {
   MuiIconButton: {
     styleOverrides: {
       root: {
-        color: '#F3F2EF',
+        color: '#F2F3F5',
       },
     },
   },

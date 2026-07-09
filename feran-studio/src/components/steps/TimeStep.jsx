@@ -71,11 +71,11 @@ export default function TimeStep({ professionalId, serviceId, date, selected, on
                     fontWeight: 600,
                     ...(!isSelected &&
                       available && {
-                        borderColor: 'rgba(198,161,91,0.35)',
+                        borderColor: 'rgba(173,177,184,0.35)',
                         color: 'text.primary',
                         '&:hover': {
                           borderColor: 'secondary.main',
-                          bgcolor: 'rgba(198,161,91,0.08)',
+                          bgcolor: 'rgba(173,177,184,0.08)',
                         },
                       }),
                   }}

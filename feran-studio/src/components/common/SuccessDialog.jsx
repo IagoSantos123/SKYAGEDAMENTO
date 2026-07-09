@@ -23,11 +23,11 @@ export default function SuccessDialog({ open, onNewBooking }) {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            background: 'linear-gradient(150deg, #D9BC85 0%, #A3813F 100%)',
-            boxShadow: '0 14px 32px -10px rgba(198,161,91,0.5)',
+            background: 'linear-gradient(150deg, #E7E9EC 0%, #7A7E85 100%)',
+            boxShadow: '0 14px 32px -10px rgba(173,177,184,0.5)',
           }}
         >
-          <EventAvailableRoundedIcon sx={{ fontSize: 44, color: '#161104' }} />
+          <EventAvailableRoundedIcon sx={{ fontSize: 44, color: '#0A0A0B' }} />
         </Box>
         <Typography variant="h4">{MESSAGES.successTitle}</Typography>
         <Typography variant="body1" color="text.secondary">

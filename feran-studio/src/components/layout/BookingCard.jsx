@@ -24,7 +24,7 @@ export default function BookingCard({ progress, showProgress, canGoBack, onBack,
           right: 0,
           height: '1px',
           background:
-            'linear-gradient(90deg, transparent, rgba(198,161,91,0.5), transparent)',
+            'linear-gradient(90deg, transparent, rgba(173,177,184,0.5), transparent)',
         },
       }}
     >
