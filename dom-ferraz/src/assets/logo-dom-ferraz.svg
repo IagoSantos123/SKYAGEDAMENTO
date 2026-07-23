@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 620" role="img" aria-labelledby="title">
+  <title id="title">Barbearia Dom Ferraz</title>
+  <rect width="720" height="620" rx="48" fill="#f7ead3"/>
+  <g fill="#4b291e">
+    <text x="360" y="102" text-anchor="middle" font-family="Georgia,serif" font-size="38" letter-spacing="12">BARBEARIA</text>
+    <circle cx="118" cy="125" r="7"/><circle cx="602" cy="125" r="7"/>
+    <text x="360" y="285" text-anchor="middle" font-family="Georgia,serif" font-size="174" font-weight="700">Dom</text>
+    <text x="360" y="438" text-anchor="middle" font-family="Georgia,serif" font-size="176" font-weight="700">Ferraz</text>
+    <path d="M184 480h352v58H184z" fill="none" stroke="#4b291e" stroke-width="4"/>
+    <text x="360" y="521" text-anchor="middle" font-family="Georgia,serif" font-size="26" letter-spacing="11">DESDE 2016</text>
+    <path d="M270 567l68-36 9 13-63 45zm180 0l-68-36-9 13 63 45z"/>
+    <circle cx="360" cy="574" r="11" fill="none" stroke="#4b291e" stroke-width="5"/>
+  </g>
+</svg>
