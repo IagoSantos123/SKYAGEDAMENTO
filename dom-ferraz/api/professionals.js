@@ -9,13 +9,23 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await lucroMaisFetch('/agendamentos/colaboradores')
-    if (!response.ok) {
+    const date = typeof req.query.date === 'string' ? req.query.date : null
+    const [response, blocksResponse] = await Promise.all([
+      lucroMaisFetch('/agendamentos/colaboradores'),
+      date
+        ? lucroMaisFetch(`/agendamentos/bloqueios?data=${encodeURIComponent(date)}`)
+        : Promise.resolve(null),
+    ])
+
+    if (!response.ok || (blocksResponse && !blocksResponse.ok)) {
       return res.status(502).json({ error: 'Não foi possível carregar os profissionais.' })
     }
 
     const colaboradores = await response.json()
+    const blocks = blocksResponse ? await blocksResponse.json() : []
+    const blockedIds = new Set(blocks.map((block) => String(block.colaboradorId)))
     const professionals = colaboradores
+      .filter((c) => !blockedIds.has(String(c.id)))
       .slice()
       .sort((a, b) => (a.ordem ?? 0) - (b.ordem ?? 0))
       .map((c) => ({

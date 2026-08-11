@@ -14,9 +14,9 @@ export const STEPS = {
 export const STEP_ORDER = [
   STEPS.UNIT,
   STEPS.UNIT,
+  STEPS.DATE,
   STEPS.PROFESSIONAL,
   STEPS.SERVICE,
-  STEPS.DATE,
   STEPS.TIME,
   STEPS.NOTES,
   STEPS.IDENTIFY,
@@ -25,9 +25,9 @@ export const STEP_ORDER = [
 
 // Passos que contam para a barra de progresso (identificação é tratada à parte)
 export const PROGRESS_STEPS = [
+  STEPS.DATE,
   STEPS.PROFESSIONAL,
   STEPS.SERVICE,
-  STEPS.DATE,
   STEPS.TIME,
   STEPS.NOTES,
   STEPS.IDENTIFY,

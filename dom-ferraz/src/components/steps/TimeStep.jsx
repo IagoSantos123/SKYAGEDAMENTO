@@ -7,6 +7,7 @@ import ReceptionistMessage from '../common/ReceptionistMessage'
 
 export default function TimeStep({ professionalId, serviceId, date, selected, onSelect }) {
   const [slots, setSlots] = useState([])
+  const [closed, setClosed] = useState(false)
   const [status, setStatus] = useState('loading') // loading | ready | error
 
   useEffect(() => {
@@ -14,6 +15,7 @@ export default function TimeStep({ professionalId, serviceId, date, selected, on
 
     let active = true
     setStatus('loading')
+    setClosed(false)
     getAvailability({
       colaboradorId: professionalId,
       servicoId: serviceId,
@@ -22,6 +24,7 @@ export default function TimeStep({ professionalId, serviceId, date, selected, on
       .then((data) => {
         if (!active) return
         setSlots(data.slots || [])
+        setClosed(Boolean(data.closed))
         setStatus('ready')
       })
       .catch(() => {
@@ -50,7 +53,11 @@ export default function TimeStep({ professionalId, serviceId, date, selected, on
       )}
 
       {status === 'ready' && slots.length === 0 && (
-        <Alert severity="info">Nenhum horário disponível para essa data.</Alert>
+        <Alert severity="info">
+          {closed
+            ? 'Esse profissional não possui expediente nessa data. Volte e escolha outro profissional ou dia.'
+            : 'Todos os horários dessa data já estão ocupados. Volte e escolha outro profissional ou dia.'}
+        </Alert>
       )}
 
       {status === 'ready' && slots.length > 0 && (

@@ -1,65 +1,55 @@
-import { Box, Chip, Stack, Typography } from '@mui/material'
-import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded'
-import BoltRoundedIcon from '@mui/icons-material/BoltRounded'
-import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded'
-import logoDomFerraz from '../../assets/logo-dom-ferraz-original.jpeg'
+import { Box, Button, Stack, Typography } from '@mui/material'
+import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined'
+import experienciaImage from '../../assets/hero-dom-ferraz-v2.png'
 
 export default function BookingHeader() {
   return (
-    <Stack spacing={0} sx={{ alignItems: 'center', mb: { xs: 5, sm: 7 }, textAlign: 'center', animation: 'heroEnter .8s cubic-bezier(.2,.8,.2,1) both' }}>
+    <Box sx={{ width: '100%', display: 'grid', gridTemplateColumns: { xs: '1fr', md: '40% 60%' }, minHeight: { xs: 660, md: 500 }, bgcolor: '#efe2d2', overflow: 'hidden', animation: 'heroEnter .8s cubic-bezier(.2,.8,.2,1) both' }}>
       <Box
         sx={{
-          width: { xs: 184, sm: 220 },
-          aspectRatio: '1 / 1',
-          borderRadius: { xs: '28px', sm: '34px' },
           display: 'flex',
-          alignItems: 'center',
           justifyContent: 'center',
-          overflow: 'hidden',
-          background: '#F7EAD3',
-          border: '1px solid rgba(230,191,138,.5)',
-          boxShadow: '0 32px 90px -26px rgba(199,148,93,.72), 0 0 0 8px rgba(247,234,211,.045)',
-          transform: 'rotate(-1deg)',
-          mb: { xs: 4, sm: 5 },
-          animation: 'sealEnter .9s cubic-bezier(.2,.8,.2,1) both',
-          position: 'relative',
+          flexDirection: 'column',
+          alignItems: 'flex-start',
+          px: { xs: 3.5, sm: 7, md: 5 }, py: { xs: 6, md: 7 },
+          position: 'relative', zIndex: 1,
         }}
       >
-        <Box
-          component="img"
-          src={logoDomFerraz}
-          alt="Barbearia Dom Ferraz"
-          sx={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'center' }}
-        />
-      </Box>
-      <Box sx={{ maxWidth: 680 }}>
         <Typography
           variant="overline"
-          sx={{ color: 'secondary.light', display: 'block', mb: 2, letterSpacing: '.24em' }}
+          sx={{ color: 'secondary.main', display: 'block', mb: 2.5, letterSpacing: '.22em' }}
         >
-          Tradição desde 2016
+          Barbearia desde 2016
         </Typography>
         <Typography
           variant="h1"
           sx={{
-            fontSize: { xs: '2.4rem', sm: '3.65rem' },
-            lineHeight: 1.02,
+            fontSize: { xs: '2.75rem', sm: '3.8rem', md: '3.65rem' },
+            lineHeight: .98,
             letterSpacing: '-.045em',
             textWrap: 'balance',
             textTransform: 'none',
+            color: '#351f17',
           }}
         >
-          Seu melhor estilo começa aqui
+          Seu estilo.<br />Nosso padrão.
         </Typography>
+        <Box sx={{ width: 38, height: 2, bgcolor: 'secondary.main', my: 3 }} />
+        <Typography sx={{ maxWidth: 390, lineHeight: 1.75, color: '#6f5b50', fontSize: { xs: '.98rem', sm: '1.05rem' } }}>
+          Corte, barba e uma experiência completa para quem valoriza qualidade, atenção e confiança.
+        </Typography>
+        <Button variant="contained" color="secondary" size="large" startIcon={<CalendarMonthOutlinedIcon />} onClick={() => document.querySelector('#agendamento')?.scrollIntoView({ behavior: 'smooth' })} sx={{ mt: 4 }}>
+          Agendar agora
+        </Button>
       </Box>
-      <Typography variant="subtitle1" sx={{ maxWidth: 540, lineHeight: 1.7, mt: 2.5, color: 'rgba(255,248,236,.82)', fontSize: { xs: '1rem', sm: '1.12rem' } }}>
-        Escolha sua unidade e reserve seu momento de cuidado em poucos passos.
-      </Typography>
-      <Stack direction="row" sx={{ flexWrap: 'wrap', justifyContent: 'center', gap: 1.25, mt: 3.5 }}>
-        <Chip icon={<BoltRoundedIcon />} label="Menos de 1 minuto" variant="outlined" />
-        <Chip icon={<AutoAwesomeRoundedIcon />} label="Atendimento premium" variant="outlined" />
-        <Chip icon={<CheckCircleOutlineRoundedIcon />} label="Confirmação automática" variant="outlined" />
-      </Stack>
-    </Stack>
+      <Box sx={{ position: 'relative', minHeight: { xs: 340, md: 'auto' }, overflow: 'hidden' }}>
+        <Box component="img" src={experienciaImage} alt="Cliente durante atendimento na Barbearia Dom Ferraz" sx={{ width: '100%', height: '100%', position: 'absolute', inset: 0, objectFit: 'cover', objectPosition: '57% center' }} />
+        <Box sx={{ position: 'absolute', inset: 0, background: { xs: 'linear-gradient(180deg, rgba(239,226,210,.15), transparent 30%)', md: 'linear-gradient(90deg, rgba(239,226,210,.28), transparent 22%)' } }} />
+        <Stack sx={{ position: 'absolute', right: 22, bottom: 22, bgcolor: 'rgba(35,21,16,.86)', color: '#fff8ec', px: 2.25, py: 1.5, backdropFilter: 'blur(10px)' }}>
+          <Typography sx={{ fontFamily: '"Playfair Display", serif', fontWeight: 700 }}>Atendimento premium</Typography>
+          <Typography variant="caption" sx={{ color: 'rgba(255,248,236,.7)' }}>em três unidades</Typography>
+        </Stack>
+      </Box>
+    </Box>
   )
 }

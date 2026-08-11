@@ -1,5 +1,5 @@
 import { Avatar, Box, Stack, Typography } from '@mui/material'
-import ContentCutRoundedIcon from '@mui/icons-material/ContentCutRounded'
+import logo from '../../assets/logo-dom-ferraz.svg'
 
 /**
  * Bolha de mensagem da "recepcionista virtual", usada no topo de cada etapa
@@ -10,15 +10,16 @@ export default function ReceptionistMessage({ title, subtitle }) {
     <Stack direction="row" spacing={2} sx={{ alignItems: 'flex-start', mb: 4, animation: 'messageEnter .55s ease-out both' }}>
       <Avatar
         sx={{
-          background: 'linear-gradient(150deg, #E6BF8A 0%, #8F5B35 100%)',
-          color: '#1C100C',
-          width: 40,
-          height: 40,
-          boxShadow: '0 6px 16px -4px rgba(143,91,53,0.55)',
+          background: '#F7EAD3',
+          width: 48,
+          height: 48,
+          p: .35,
+          border: '1px solid rgba(75,41,30,.16)',
+          boxShadow: '0 7px 18px -8px rgba(75,41,30,.45)',
           flexShrink: 0,
         }}
       >
-        <ContentCutRoundedIcon fontSize="small" />
+        <Box component="img" src={logo} alt="Dom Ferraz" sx={{ width: '100%', height: '100%', objectFit: 'contain' }} />
       </Avatar>
       <Box
         sx={{

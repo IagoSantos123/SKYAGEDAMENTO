@@ -9,9 +9,9 @@ function extractErrorMessage(error, fallback) {
   return error?.response?.data?.error || fallback
 }
 
-export async function getProfessionals() {
+export async function getProfessionals(date) {
   try {
-    const { data } = await apiClient.get('/professionals')
+    const { data } = await apiClient.get('/professionals', { params: { date } })
     return data
   } catch (error) {
     throw new Error(extractErrorMessage(error, 'Não foi possível carregar os profissionais.'))

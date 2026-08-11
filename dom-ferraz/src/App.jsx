@@ -19,8 +19,8 @@ import ExistingClientStep from './components/steps/ExistingClientStep'
 import NewClientStep from './components/steps/NewClientStep'
 import SummaryStep from './components/steps/SummaryStep'
 import MarketingSections from './components/marketing/MarketingSections'
+import ServicesStrip from './components/marketing/ServicesStrip'
 import BrandNav from './components/layout/BrandNav'
-import experienciaImage from './assets/experiencia-dom-ferraz.jpeg'
 
 export default function App() {
   const flow = useBookingFlow()
@@ -76,6 +76,7 @@ export default function App() {
           <ProfessionalStep
             selected={flow.bookingData.professional}
             unit={flow.bookingData.unit}
+            date={flow.bookingData.date}
             onSelect={flow.selectProfessional}
           />
         )
@@ -155,48 +156,29 @@ export default function App() {
     <Box
       sx={{
         minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        py: { xs: 3, sm: 6, md: 8 },
-        px: { xs: 1.5, sm: 3 },
+        bgcolor: 'background.default',
         position: 'relative',
         overflow: 'hidden',
-        backgroundImage: `linear-gradient(180deg, rgba(15,9,7,.82) 0%, #140D0A 42%), url(${experienciaImage})`,
-        backgroundSize: '100% 780px',
-        backgroundPosition: 'center top',
-        backgroundRepeat: 'no-repeat',
-        '&::before': {
-          content: '""',
-          position: 'fixed',
-          width: { xs: 280, md: 520 },
-          height: { xs: 280, md: 520 },
-          borderRadius: '50%',
-          top: { xs: -150, md: -260 },
-          right: { xs: -140, md: -180 },
-          background: 'rgba(199,148,93,.12)',
-          filter: 'blur(80px)',
-          pointerEvents: 'none',
-        },
-        '&::after': {
-          content: '""',
-          position: 'fixed',
-          width: { xs: 240, md: 440 },
-          height: { xs: 240, md: 440 },
-          borderRadius: '50%',
-          bottom: { xs: -140, md: -250 },
-          left: { xs: -130, md: -170 },
-          background: 'rgba(92,47,31,.2)',
-          filter: 'blur(70px)',
-          pointerEvents: 'none',
-        },
       }}
     >
-      <Container maxWidth="lg" disableGutters sx={{ display: 'flex', justifyContent: 'center', position: 'relative', zIndex: 1 }}>
+      <Container maxWidth="lg" sx={{ position: 'relative' }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <BrandNav />
           <BookingHeader />
-          <Box id="agendamento" sx={{ width: '100%', display: 'flex', justifyContent: 'center', scrollMarginTop: 24 }}>
+          <ServicesStrip />
+          <Box
+            component="section"
+            id="agendamento"
+            sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', py: { xs: 6, md: 7 }, scrollMarginTop: 72 }}
+          >
+            <Box sx={{ textAlign: 'center', mb: { xs: 4, md: 5 } }}>
+              <Box component="span" sx={{ color: 'secondary.main', fontSize: '.72rem', fontWeight: 800, letterSpacing: '.2em', textTransform: 'uppercase' }}>
+                Escolha onde cuidar do seu estilo
+              </Box>
+              <Box component="h2" sx={{ m: 0, mt: 1, fontFamily: '"Playfair Display", serif', fontSize: { xs: '2rem', md: '3rem' }, lineHeight: 1.1, color: 'text.primary' }}>
+                — Escolha sua unidade —
+              </Box>
+            </Box>
             <BookingCard
               progress={flow.progress}
               showProgress={showProgress}

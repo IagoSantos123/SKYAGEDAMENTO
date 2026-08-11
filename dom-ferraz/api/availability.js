@@ -69,15 +69,23 @@ export default async function handler(req, res) {
   }
 
   try {
-    const [agendamentosRes, servicosRes] = await Promise.all([
+    const [agendamentosRes, servicosRes, blocksRes] = await Promise.all([
       lucroMaisFetch(
         `/agendamentos?inicio=${data}&fim=${data}&colaboradorId=${encodeURIComponent(colaboradorId)}`
       ),
       lucroMaisFetch('/agendamentos/servicos'),
+      lucroMaisFetch(
+        `/agendamentos/bloqueios?data=${encodeURIComponent(data)}&colaboradorId=${encodeURIComponent(colaboradorId)}`
+      ),
     ])
 
-    if (!agendamentosRes.ok || !servicosRes.ok) {
+    if (!agendamentosRes.ok || !servicosRes.ok || !blocksRes.ok) {
       return res.status(502).json({ error: 'Não foi possível calcular a disponibilidade.' })
+    }
+
+    const blocks = await blocksRes.json()
+    if (blocks.length > 0) {
+      return res.status(200).json({ closed: true, reason: 'blocked', slots: [] })
     }
 
     const agendamentos = await agendamentosRes.json()

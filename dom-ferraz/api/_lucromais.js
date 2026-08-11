@@ -3,7 +3,8 @@
 // servidor — nunca chegam ao navegador do visitante da landing page.
 
 const BASE_URL =
-  process.env.LUCROMAIS_BASE_URL || 'https://lucro-mais-backend.vercel.app/api'
+  process.env.LUCROMAIS_BASE_URL ||
+  'https://lucromais-backend-mssolucoes.vercel.app/api'
 
 let cachedToken = null
 let cachedTokenExpiresAt = 0

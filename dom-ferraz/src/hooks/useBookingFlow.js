@@ -42,14 +42,14 @@ export function useBookingFlow() {
   const selectUnit = useCallback(
     (unit) => {
       updateBooking({ unit, professional: null, service: null, date: null, time: null })
-      goTo(STEPS.PROFESSIONAL)
+      goTo(STEPS.DATE)
     },
     [goTo, updateBooking]
   )
 
   const selectProfessional = useCallback(
     (professional) => {
-      updateBooking({ professional })
+      updateBooking({ professional, service: null, time: null })
       goTo(STEPS.SERVICE)
     },
     [goTo, updateBooking]
@@ -57,16 +57,16 @@ export function useBookingFlow() {
 
   const selectService = useCallback(
     (service) => {
-      updateBooking({ service })
-      goTo(STEPS.DATE)
+      updateBooking({ service, time: null })
+      goTo(STEPS.TIME)
     },
     [goTo, updateBooking]
   )
 
   const selectDate = useCallback(
     (date) => {
-      updateBooking({ date, time: null })
-      goTo(STEPS.TIME)
+      updateBooking({ date, professional: null, service: null, time: null })
+      goTo(STEPS.PROFESSIONAL)
     },
     [goTo, updateBooking]
   )

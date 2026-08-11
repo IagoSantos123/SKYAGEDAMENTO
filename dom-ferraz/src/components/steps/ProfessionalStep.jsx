@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Alert, Avatar, Box, CircularProgress, Grid, Stack, Typography } from '@mui/material'
+import dayjs from 'dayjs'
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
 import { getProfessionals } from '../../services/bookingApi'
 import ReceptionistMessage from '../common/ReceptionistMessage'
@@ -15,13 +16,14 @@ function initials(name) {
     .join('')
 }
 
-export default function ProfessionalStep({ selected, unit, onSelect }) {
+export default function ProfessionalStep({ selected, unit, date, onSelect }) {
   const [professionals, setProfessionals] = useState([])
   const [status, setStatus] = useState('loading') // loading | ready | error
 
   useEffect(() => {
     let active = true
-    getProfessionals()
+    const formattedDate = dayjs(date).format('YYYY-MM-DD')
+    getProfessionals(formattedDate)
       .then((data) => {
         if (!active) return
         setProfessionals(data.filter((professional) => belongsToUnit(professional.name, unit)))
@@ -34,13 +36,13 @@ export default function ProfessionalStep({ selected, unit, onSelect }) {
     return () => {
       active = false
     }
-  }, [unit])
+  }, [unit, date])
 
   return (
     <Box>
       <ReceptionistMessage
         title={`Com quem você deseja agendar na unidade ${unit?.name}?`}
-        subtitle="Mostramos somente os profissionais desta unidade."
+        subtitle={`Mostramos quem tem expediente em ${dayjs(date).format('DD/MM/YYYY')}.`}
       />
 
       {status === 'loading' && (
@@ -57,7 +59,7 @@ export default function ProfessionalStep({ selected, unit, onSelect }) {
 
       {status === 'ready' && professionals.length === 0 && (
         <Alert severity="info">
-          Ainda não há profissionais da unidade {unit?.name} cadastrados para agendamento no sistema.
+          Nenhum profissional da unidade {unit?.name} possui expediente nessa data. Volte e escolha outro dia.
         </Alert>
       )}
 

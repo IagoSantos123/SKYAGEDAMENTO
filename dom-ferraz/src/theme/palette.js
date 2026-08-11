@@ -1,16 +1,10 @@
 export const palette = {
-  mode: 'dark',
+  mode: 'light',
   primary: {
-    main: '#F7EAD3',
-    light: '#FFF8EC',
-    dark: '#D8BE98',
-    contrastText: '#24140F',
+    main: '#3A2118', light: '#644436', dark: '#21110C', contrastText: '#FFF8EC',
   },
   secondary: {
-    main: '#C7945D',
-    light: '#E6BF8A',
-    dark: '#8F5B35',
-    contrastText: '#1C100C',
+    main: '#4A291E', light: '#7C5542', dark: '#2C1710', contrastText: '#FFF8EC',
   },
   success: {
     main: '#7FB88B',
@@ -22,15 +16,12 @@ export const palette = {
     main: '#D08770',
   },
   background: {
-    default: '#140D0A',
-    paper: '#211510',
+    default: '#F7EDDF', paper: '#FFF9F0',
   },
   text: {
-    primary: '#FFF8EC',
-    secondary: '#C9B7A4',
-    disabled: '#745E51',
+    primary: '#352118', secondary: '#756258', disabled: '#A69387',
   },
-  divider: 'rgba(230, 191, 138, 0.14)',
+  divider: 'rgba(75, 41, 30, 0.14)',
   grey: {
     50: '#222325',
     100: '#1E1F21',

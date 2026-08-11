@@ -4,6 +4,27 @@ function onlyDigits(value) {
   return String(value || '').replace(/\D/g, '')
 }
 
+function phoneVariants(value) {
+  let digits = onlyDigits(value)
+  if ((digits.length === 12 || digits.length === 13) && digits.startsWith('55')) {
+    digits = digits.slice(2)
+  }
+
+  const variants = new Set([digits])
+  // Aceita também cadastros antigos sem o nono dígito do celular.
+  if (digits.length === 11 && digits[2] === '9') {
+    variants.add(`${digits.slice(0, 2)}${digits.slice(3)}`)
+  } else if (digits.length === 10) {
+    variants.add(`${digits.slice(0, 2)}9${digits.slice(2)}`)
+  }
+  return variants
+}
+
+function phonesMatch(first, second) {
+  const firstVariants = phoneVariants(first)
+  return [...phoneVariants(second)].some((phone) => firstVariants.has(phone))
+}
+
 // IMPORTANTE: GET /agendamentos/clientes devolve a lista inteira de clientes
 // da empresa (nome, telefone, email, nascimento). Nunca repassamos essa
 // lista completa para o navegador — filtramos aqui no servidor e devolvemos
@@ -27,7 +48,7 @@ export default async function handler(req, res) {
 
     const clientes = await response.json()
     const found = clientes.find(
-      (c) => onlyDigits(c.telefone) === phoneDigits || onlyDigits(c.whatsapp) === phoneDigits
+      (c) => phonesMatch(c.telefone, phoneDigits) || phonesMatch(c.whatsapp, phoneDigits)
     )
 
     if (!found) {
@@ -37,8 +58,9 @@ export default async function handler(req, res) {
     return res.status(200).json({
       id: found.id,
       name: found.nome,
-      phone: found.telefone,
+      phone: found.telefone || found.whatsapp || req.query.phone,
       email: found.email,
+      birthDate: found.nascimento,
     })
   } catch (error) {
     console.error('[api/clients-lookup]', error)
