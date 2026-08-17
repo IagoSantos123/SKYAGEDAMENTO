@@ -1,4 +1,4 @@
-import { lucroMaisFetch } from './_lucromais.js'
+import { getUnitId, lucroMaisFetch } from './_lucromais.js'
 
 function onlyDigits(value) {
   return String(value || '').replace(/\D/g, '')
@@ -41,7 +41,9 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await lucroMaisFetch('/agendamentos/clientes')
+    const unitId = getUnitId(req)
+    if (!unitId) return res.status(400).json({ error: 'Unidade inválida ou não informada.' })
+    const response = await lucroMaisFetch(unitId, '/agendamentos/clientes')
     if (!response.ok) {
       return res.status(502).json({ error: 'Não foi possível buscar o cliente.' })
     }

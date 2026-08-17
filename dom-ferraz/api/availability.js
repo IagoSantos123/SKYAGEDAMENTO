@@ -1,4 +1,4 @@
-import { lucroMaisFetch } from './_lucromais.js'
+import { getUnitId, lucroMaisFetch } from './_lucromais.js'
 
 // Regra inicial da Barbearia Dom Ferraz: Segunda a Sábado, 09:00-19:00.
 // A API do LucroMais não expõe horário de funcionamento nem disponibilidade
@@ -69,12 +69,14 @@ export default async function handler(req, res) {
   }
 
   try {
+    const unitId = getUnitId(req)
+    if (!unitId) return res.status(400).json({ error: 'Unidade inválida ou não informada.' })
     const [agendamentosRes, servicosRes, blocksRes] = await Promise.all([
-      lucroMaisFetch(
+      lucroMaisFetch(unitId,
         `/agendamentos?inicio=${data}&fim=${data}&colaboradorId=${encodeURIComponent(colaboradorId)}`
       ),
-      lucroMaisFetch('/agendamentos/servicos'),
-      lucroMaisFetch(
+      lucroMaisFetch(unitId, '/agendamentos/servicos'),
+      lucroMaisFetch(unitId,
         `/agendamentos/bloqueios?data=${encodeURIComponent(data)}&colaboradorId=${encodeURIComponent(colaboradorId)}`
       ),
     ])

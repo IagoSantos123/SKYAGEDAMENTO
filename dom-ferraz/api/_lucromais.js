@@ -6,8 +6,19 @@ const BASE_URL =
   process.env.LUCROMAIS_BASE_URL ||
   'https://lucromais-backend-mssolucoes.vercel.app/api'
 
-let cachedToken = null
-let cachedTokenExpiresAt = 0
+const UNIT_ENV_PREFIX = {
+  manaira: 'MANAIRA',
+  miramar: 'MIRAMAR',
+  sape: 'SAPE',
+}
+
+const tokenCache = new Map()
+
+export function getUnitId(req) {
+  const unitId = req.method === 'POST' ? req.body?.unitId : req.query?.unitId
+  if (!UNIT_ENV_PREFIX[unitId]) return null
+  return unitId
+}
 
 function decodeJwtExpiry(token) {
   try {
@@ -20,13 +31,14 @@ function decodeJwtExpiry(token) {
   }
 }
 
-async function login() {
-  const email = process.env.LUCROMAIS_EMAIL
-  const senha = process.env.LUCROMAIS_SENHA
+async function login(unitId) {
+  const prefix = UNIT_ENV_PREFIX[unitId]
+  const email = process.env[`LUCROMAIS_${prefix}_EMAIL`]
+  const senha = process.env[`LUCROMAIS_${prefix}_SENHA`]
 
   if (!email || !senha) {
     throw new Error(
-      'LUCROMAIS_EMAIL/LUCROMAIS_SENHA não configuradas nas variáveis de ambiente do servidor.'
+      `Credenciais do LucroMais não configuradas para a unidade ${unitId}.`
     )
   }
 
@@ -45,27 +57,30 @@ async function login() {
     throw new Error('Resposta de login do LucroMais sem token.')
   }
 
-  cachedToken = data.token
   const exp = decodeJwtExpiry(data.token)
-  // Renova um pouco antes do vencimento real; se não der pra decodificar, usa 30min.
-  cachedTokenExpiresAt = exp ? exp - 60_000 : Date.now() + 30 * 60_000
+  tokenCache.set(unitId, {
+    token: data.token,
+    expiresAt: exp ? exp - 60_000 : Date.now() + 30 * 60_000,
+  })
 
-  return cachedToken
+  return data.token
 }
 
-async function getToken({ forceRefresh = false } = {}) {
-  if (!forceRefresh && cachedToken && Date.now() < cachedTokenExpiresAt) {
-    return cachedToken
+async function getToken(unitId, { forceRefresh = false } = {}) {
+  const cached = tokenCache.get(unitId)
+  if (!forceRefresh && cached?.token && Date.now() < cached.expiresAt) {
+    return cached.token
   }
-  return login()
+  return login(unitId)
 }
 
 /**
  * Chama a API do LucroMais autenticada, renovando o token automaticamente
  * se a primeira tentativa voltar 401.
  */
-export async function lucroMaisFetch(path, options = {}) {
-  const token = await getToken()
+export async function lucroMaisFetch(unitId, path, options = {}) {
+  if (!UNIT_ENV_PREFIX[unitId]) throw new Error('Unidade inválida.')
+  const token = await getToken(unitId)
 
   const doFetch = (bearerToken) =>
     fetch(`${BASE_URL}${path}`, {
@@ -80,7 +95,7 @@ export async function lucroMaisFetch(path, options = {}) {
   let response = await doFetch(token)
 
   if (response.status === 401) {
-    const freshToken = await getToken({ forceRefresh: true })
+    const freshToken = await getToken(unitId, { forceRefresh: true })
     response = await doFetch(freshToken)
   }
 

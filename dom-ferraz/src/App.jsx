@@ -29,12 +29,13 @@ export default function App() {
   const [submitError, setSubmitError] = useState(null)
 
   const handleConfirmBooking = async () => {
-    const { professional, service, date, time, notes, client, clientType } = flow.bookingData
+    const { unit, professional, service, date, time, notes, client, clientType } = flow.bookingData
 
     setSubmitError(null)
     setSubmitting(true)
     try {
       await createBooking({
+        unitId: unit?.id,
         colaboradorId: professional?.id,
         servicoId: service?.id,
         servicoNome: service?.name,
@@ -85,6 +86,7 @@ export default function App() {
         return (
           <ServiceStep
             selected={flow.bookingData.service}
+            unitId={flow.bookingData.unit?.id}
             onSelect={flow.selectService}
           />
         )
@@ -100,6 +102,7 @@ export default function App() {
       case STEPS.TIME:
         return (
           <TimeStep
+            unitId={flow.bookingData.unit?.id}
             professionalId={flow.bookingData.professional?.id}
             serviceId={flow.bookingData.service?.id}
             date={flow.bookingData.date}
@@ -127,6 +130,7 @@ export default function App() {
       case STEPS.EXISTING_CLIENT:
         return (
           <ExistingClientStep
+            unitId={flow.bookingData.unit?.id}
             onConfirm={flow.confirmExistingClient}
             onNotFound={flow.chooseNewClient}
           />

@@ -1,4 +1,4 @@
-import { lucroMaisFetch } from './_lucromais.js'
+import { getUnitId, lucroMaisFetch } from './_lucromais.js'
 
 // Expõe só o que a landing page precisa para montar os cards de
 // profissionais — nunca repassa o token nem campos internos do LucroMais.
@@ -9,11 +9,13 @@ export default async function handler(req, res) {
   }
 
   try {
+    const unitId = getUnitId(req)
+    if (!unitId) return res.status(400).json({ error: 'Unidade inválida ou não informada.' })
     const date = typeof req.query.date === 'string' ? req.query.date : null
     const [response, blocksResponse] = await Promise.all([
-      lucroMaisFetch('/agendamentos/colaboradores'),
+      lucroMaisFetch(unitId, '/agendamentos/colaboradores'),
       date
-        ? lucroMaisFetch(`/agendamentos/bloqueios?data=${encodeURIComponent(date)}`)
+        ? lucroMaisFetch(unitId, `/agendamentos/bloqueios?data=${encodeURIComponent(date)}`)
         : Promise.resolve(null),
     ])
 

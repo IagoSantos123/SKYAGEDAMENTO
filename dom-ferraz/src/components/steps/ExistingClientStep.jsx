@@ -21,7 +21,7 @@ import { lookupClientByPhone } from '../../services/bookingApi'
 import ReceptionistMessage from '../common/ReceptionistMessage'
 import PhoneMaskField from '../common/PhoneMaskField'
 
-export default function ExistingClientStep({ onConfirm, onNotFound }) {
+export default function ExistingClientStep({ unitId, onConfirm, onNotFound }) {
   const [status, setStatus] = useState('input') // input | searching | found | not_found | error
   const [foundClient, setFoundClient] = useState(null)
 
@@ -33,7 +33,7 @@ export default function ExistingClientStep({ onConfirm, onNotFound }) {
   const onSearch = async ({ phone }) => {
     setStatus('searching')
     try {
-      const client = await lookupClientByPhone(phone)
+      const client = await lookupClientByPhone(unitId, phone)
       if (client) {
         setFoundClient(client)
         setStatus('found')

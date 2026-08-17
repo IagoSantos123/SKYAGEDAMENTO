@@ -1,4 +1,4 @@
-import { lucroMaisFetch } from './_lucromais.js'
+import { getUnitId, lucroMaisFetch } from './_lucromais.js'
 
 function isValidDateString(value) {
   return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)
@@ -35,7 +35,9 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await lucroMaisFetch('/agendamentos', {
+    const unitId = getUnitId(req)
+    if (!unitId) return res.status(400).json({ error: 'Unidade inválida ou não informada.' })
+    const response = await lucroMaisFetch(unitId, '/agendamentos', {
       method: 'POST',
       body: JSON.stringify({
         colaboradorId,

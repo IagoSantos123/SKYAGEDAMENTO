@@ -1,4 +1,4 @@
-import { lucroMaisFetch } from './_lucromais.js'
+import { getUnitId, lucroMaisFetch } from './_lucromais.js'
 
 function formatDurationLabel(minutes) {
   if (!minutes) return ''
@@ -16,7 +16,9 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await lucroMaisFetch('/agendamentos/servicos')
+    const unitId = getUnitId(req)
+    if (!unitId) return res.status(400).json({ error: 'Unidade inválida ou não informada.' })
+    const response = await lucroMaisFetch(unitId, '/agendamentos/servicos')
     if (!response.ok) {
       return res.status(502).json({ error: 'Não foi possível carregar os serviços.' })
     }

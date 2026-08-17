@@ -5,7 +5,7 @@ import { getAvailability } from '../../services/bookingApi'
 import { MESSAGES } from '../../constants/messages'
 import ReceptionistMessage from '../common/ReceptionistMessage'
 
-export default function TimeStep({ professionalId, serviceId, date, selected, onSelect }) {
+export default function TimeStep({ unitId, professionalId, serviceId, date, selected, onSelect }) {
   const [slots, setSlots] = useState([])
   const [closed, setClosed] = useState(false)
   const [status, setStatus] = useState('loading') // loading | ready | error
@@ -17,6 +17,7 @@ export default function TimeStep({ professionalId, serviceId, date, selected, on
     setStatus('loading')
     setClosed(false)
     getAvailability({
+      unitId,
       colaboradorId: professionalId,
       servicoId: serviceId,
       date: dayjs(date).format('YYYY-MM-DD'),
@@ -34,7 +35,7 @@ export default function TimeStep({ professionalId, serviceId, date, selected, on
     return () => {
       active = false
     }
-  }, [professionalId, serviceId, date])
+  }, [unitId, professionalId, serviceId, date])
 
   return (
     <Box>

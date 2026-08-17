@@ -5,7 +5,6 @@ import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
 import { getProfessionals } from '../../services/bookingApi'
 import ReceptionistMessage from '../common/ReceptionistMessage'
 import SelectableCard from '../common/SelectableCard'
-import { belongsToUnit } from '../../constants/units'
 
 function initials(name) {
   return (name || '')
@@ -23,10 +22,10 @@ export default function ProfessionalStep({ selected, unit, date, onSelect }) {
   useEffect(() => {
     let active = true
     const formattedDate = dayjs(date).format('YYYY-MM-DD')
-    getProfessionals(formattedDate)
+    getProfessionals(unit?.id, formattedDate)
       .then((data) => {
         if (!active) return
-        setProfessionals(data.filter((professional) => belongsToUnit(professional.name, unit)))
+        setProfessionals(data)
         setStatus('ready')
       })
       .catch(() => {
