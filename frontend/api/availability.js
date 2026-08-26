@@ -1,4 +1,4 @@
-import { lucroMaisFetch } from './_lucromais.js'
+import { skyPublicFetch } from './_lucromais.js'
 
 // Regra de negócio da SKY BARBEARIA: Segunda a Sábado, 09:00-19:00.
 // A API do LucroMais não expõe horário de funcionamento nem disponibilidade
@@ -54,7 +54,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Método não permitido' })
   }
 
-  const { colaboradorId, data, servicoId } = req.query
+  const { unidadeSlug, colaboradorId, data, servicoId } = req.query
 
   if (!colaboradorId || !isValidDateString(data)) {
     return res.status(400).json({ error: 'Parâmetros colaboradorId e data (YYYY-MM-DD) são obrigatórios.' })
@@ -70,10 +70,11 @@ export default async function handler(req, res) {
 
   try {
     const [agendamentosRes, servicosRes] = await Promise.all([
-      lucroMaisFetch(
+      skyPublicFetch(
+        unidadeSlug,
         `/agendamentos?inicio=${data}&fim=${data}&colaboradorId=${encodeURIComponent(colaboradorId)}`
       ),
-      lucroMaisFetch('/agendamentos/servicos'),
+      skyPublicFetch(unidadeSlug, '/servicos'),
     ])
 
     if (!agendamentosRes.ok || !servicosRes.ok) {
@@ -82,16 +83,16 @@ export default async function handler(req, res) {
 
     const agendamentos = await agendamentosRes.json()
     const servicos = await servicosRes.json()
-    const durationById = new Map(servicos.map((s) => [s.id, s.duracaoMin]))
+    const durationById = new Map(servicos.map((s) => [String(s.id), s.duration]))
 
     const requestedDuration =
-      (servicoId && durationById.get(servicoId)) || DEFAULT_SERVICE_DURATION
+      (servicoId && durationById.get(String(servicoId))) || DEFAULT_SERVICE_DURATION
 
     const busyIntervals = agendamentos
       .filter((a) => a.status !== 'cancelado')
       .map((a) => {
         const start = toMinutes(a.horario)
-        const duration = durationById.get(a.servicoId) || DEFAULT_SERVICE_DURATION
+        const duration = durationById.get(String(a.servicoId)) || DEFAULT_SERVICE_DURATION
         return [start, start + duration]
       })
 

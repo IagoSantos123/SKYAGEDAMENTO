@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { STEPS, PROGRESS_STEPS } from '../constants/steps'
 
 const initialBookingData = {
+  unit: null,
   professional: null,
   service: null,
   date: null,
@@ -38,7 +39,15 @@ export function useBookingFlow() {
     setBookingData((prev) => ({ ...prev, ...patch }))
   }, [])
 
-  const start = useCallback(() => goTo(STEPS.PROFESSIONAL), [goTo])
+  const start = useCallback(() => goTo(STEPS.UNIT), [goTo])
+
+  const selectUnit = useCallback(
+    (unit) => {
+      updateBooking({ unit, professional: null, service: null, date: null, time: null })
+      goTo(STEPS.PROFESSIONAL)
+    },
+    [goTo, updateBooking]
+  )
 
   const selectProfessional = useCallback(
     (professional) => {
@@ -130,6 +139,7 @@ export function useBookingFlow() {
     goBack,
     goTo,
     start,
+    selectUnit,
     selectProfessional,
     selectService,
     selectDate,

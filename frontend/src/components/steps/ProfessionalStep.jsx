@@ -15,13 +15,13 @@ function initials(name) {
     .join('')
 }
 
-export default function ProfessionalStep({ selected, onSelect }) {
+export default function ProfessionalStep({ unitSlug, selected, onSelect }) {
   const [professionals, setProfessionals] = useState([])
   const [status, setStatus] = useState('loading') // loading | ready | error
 
   useEffect(() => {
     let active = true
-    getProfessionals()
+    getProfessionals({ unidadeSlug: unitSlug })
       .then((data) => {
         if (!active) return
         setProfessionals(data)
@@ -34,7 +34,7 @@ export default function ProfessionalStep({ selected, onSelect }) {
     return () => {
       active = false
     }
-  }, [])
+  }, [unitSlug])
 
   return (
     <Box>

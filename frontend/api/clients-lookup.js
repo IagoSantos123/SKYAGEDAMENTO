@@ -1,4 +1,4 @@
-import { lucroMaisFetch } from './_lucromais.js'
+import { skyPublicFetch } from './_lucromais.js'
 
 function onlyDigits(value) {
   return String(value || '').replace(/\D/g, '')
@@ -20,26 +20,13 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await lucroMaisFetch('/agendamentos/clientes')
+    const response = await skyPublicFetch(req.query.unidadeSlug, `/clientes?phone=${encodeURIComponent(phoneDigits)}`)
     if (!response.ok) {
       return res.status(502).json({ error: 'Não foi possível buscar o cliente.' })
     }
 
-    const clientes = await response.json()
-    const found = clientes.find(
-      (c) => onlyDigits(c.telefone) === phoneDigits || onlyDigits(c.whatsapp) === phoneDigits
-    )
-
-    if (!found) {
-      return res.status(404).json({ error: 'Cliente não encontrado.' })
-    }
-
-    return res.status(200).json({
-      id: found.id,
-      name: found.nome,
-      phone: found.telefone,
-      email: found.email,
-    })
+    const found = await response.json()
+    return res.status(200).json(found)
   } catch (error) {
     console.error('[api/clients-lookup]', error)
     return res.status(500).json({ error: 'Erro interno ao buscar cliente.' })

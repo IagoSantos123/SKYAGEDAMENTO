@@ -14,6 +14,7 @@ import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded'
 import ContentCutRoundedIcon from '@mui/icons-material/ContentCutRounded'
 import PhoneIphoneRoundedIcon from '@mui/icons-material/PhoneIphoneRounded'
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded'
+import StorefrontRoundedIcon from '@mui/icons-material/StorefrontRounded'
 import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded'
 import { MESSAGES } from '../../constants/messages'
 import { formatCurrency, formatDateLong } from '../../utils/formatters'
@@ -39,7 +40,7 @@ function SummaryRow({ icon, label, value }) {
 }
 
 export default function SummaryStep({ bookingData, onConfirm, submitting, error }) {
-  const { professional, service, date, time, notes, client } = bookingData
+  const { unit, professional, service, date, time, notes, client } = bookingData
 
   return (
     <Box>
@@ -85,12 +86,17 @@ export default function SummaryStep({ bookingData, onConfirm, submitting, error 
               {professional?.name}
             </Typography>
             <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.6)' }}>
-              {service?.name} · {formatCurrency(service?.price || 0)}
+              {service?.name} · {service?.priceLabel || formatCurrency(service?.price || 0)}
             </Typography>
           </Box>
         </Stack>
         <Divider sx={{ borderColor: 'rgba(198,161,91,0.2)', mb: 2.5 }} />
         <Grid container spacing={2.5}>
+          <SummaryRow
+            icon={<StorefrontRoundedIcon fontSize="small" />}
+            label="Unidade"
+            value={unit?.name}
+          />
           <SummaryRow
             icon={<EventRoundedIcon fontSize="small" />}
             label="Data"

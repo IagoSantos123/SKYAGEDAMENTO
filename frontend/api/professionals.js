@@ -1,4 +1,4 @@
-import { lucroMaisFetch } from './_lucromais.js'
+import { skyPublicFetch } from './_lucromais.js'
 
 // Expõe só o que a landing page precisa para montar os cards de
 // profissionais — nunca repassa o token nem campos internos do LucroMais.
@@ -9,20 +9,12 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await lucroMaisFetch('/agendamentos/colaboradores')
+    const response = await skyPublicFetch(req.query.unidadeSlug, '/profissionais')
     if (!response.ok) {
       return res.status(502).json({ error: 'Não foi possível carregar os profissionais.' })
     }
 
-    const colaboradores = await response.json()
-    const professionals = colaboradores
-      .slice()
-      .sort((a, b) => (a.ordem ?? 0) - (b.ordem ?? 0))
-      .map((c) => ({
-        id: c.id,
-        name: c.usuarioNome,
-        color: c.cor || '#C6A15B',
-      }))
+    const professionals = await response.json()
 
     return res.status(200).json(professionals)
   } catch (error) {

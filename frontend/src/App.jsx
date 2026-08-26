@@ -9,6 +9,7 @@ import BookingCard from './components/layout/BookingCard'
 import StepTransition from './components/common/StepTransition'
 import SuccessDialog from './components/common/SuccessDialog'
 import WelcomeStep from './components/steps/WelcomeStep'
+import UnitChoiceStep from './components/steps/UnitChoiceStep'
 import ProfessionalStep from './components/steps/ProfessionalStep'
 import ServiceStep from './components/steps/ServiceStep'
 import DateStep from './components/steps/DateStep'
@@ -26,12 +27,13 @@ export default function App() {
   const [submitError, setSubmitError] = useState(null)
 
   const handleConfirmBooking = async () => {
-    const { professional, service, date, time, notes, client, clientType } = flow.bookingData
+    const { unit, professional, service, date, time, notes, client, clientType } = flow.bookingData
 
     setSubmitError(null)
     setSubmitting(true)
     try {
       await createBooking({
+        unidadeSlug: unit?.id,
         colaboradorId: professional?.id,
         servicoId: service?.id,
         servicoNome: service?.name,
@@ -63,9 +65,18 @@ export default function App() {
       case STEPS.WELCOME:
         return <WelcomeStep onStart={flow.start} />
 
+      case STEPS.UNIT:
+        return (
+          <UnitChoiceStep
+            selected={flow.bookingData.unit}
+            onSelect={flow.selectUnit}
+          />
+        )
+
       case STEPS.PROFESSIONAL:
         return (
           <ProfessionalStep
+            unitSlug={flow.bookingData.unit?.id}
             selected={flow.bookingData.professional}
             onSelect={flow.selectProfessional}
           />
@@ -74,6 +85,7 @@ export default function App() {
       case STEPS.SERVICE:
         return (
           <ServiceStep
+            unitSlug={flow.bookingData.unit?.id}
             selected={flow.bookingData.service}
             onSelect={flow.selectService}
           />
@@ -90,6 +102,7 @@ export default function App() {
       case STEPS.TIME:
         return (
           <TimeStep
+            unitSlug={flow.bookingData.unit?.id}
             professionalId={flow.bookingData.professional?.id}
             serviceId={flow.bookingData.service?.id}
             date={flow.bookingData.date}
@@ -117,6 +130,7 @@ export default function App() {
       case STEPS.EXISTING_CLIENT:
         return (
           <ExistingClientStep
+            unitSlug={flow.bookingData.unit?.id}
             onConfirm={flow.confirmExistingClient}
             onNotFound={flow.chooseNewClient}
           />

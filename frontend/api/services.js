@@ -1,4 +1,4 @@
-import { lucroMaisFetch } from './_lucromais.js'
+import { skyPublicFetch } from './_lucromais.js'
 
 function formatDurationLabel(minutes) {
   if (!minutes) return ''
@@ -16,7 +16,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await lucroMaisFetch('/agendamentos/servicos')
+    const response = await skyPublicFetch(req.query.unidadeSlug, '/servicos')
     if (!response.ok) {
       return res.status(502).json({ error: 'Não foi possível carregar os serviços.' })
     }
@@ -24,11 +24,12 @@ export default async function handler(req, res) {
     const servicos = await response.json()
     const services = servicos.map((s) => ({
       id: s.id,
-      name: s.nome,
-      duration: s.duracaoMin,
-      durationLabel: formatDurationLabel(s.duracaoMin),
-      price: s.preco,
-      color: s.cor || '#C6A15B',
+      name: s.name,
+      duration: s.duration,
+      durationLabel: s.durationLabel || formatDurationLabel(s.duration),
+      price: s.price,
+      priceLabel: s.priceLabel,
+      color: s.color || s.cor || '#C6A15B',
     }))
 
     return res.status(200).json(services)

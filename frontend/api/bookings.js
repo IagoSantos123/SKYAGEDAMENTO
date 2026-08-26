@@ -1,4 +1,4 @@
-import { lucroMaisFetch } from './_lucromais.js'
+import { skyPublicFetch } from './_lucromais.js'
 
 function isValidDateString(value) {
   return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)
@@ -26,6 +26,7 @@ export default async function handler(req, res) {
     servicoId,
     servicoNome,
     observacao,
+    unidadeSlug,
   } = req.body || {}
 
   if (!colaboradorId || !clienteNome || !isValidDateString(data) || !isValidTimeString(horario)) {
@@ -35,7 +36,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await lucroMaisFetch('/agendamentos', {
+    const response = await skyPublicFetch(unidadeSlug, '/agendamentos', {
       method: 'POST',
       body: JSON.stringify({
         colaboradorId,

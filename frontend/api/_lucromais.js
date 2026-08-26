@@ -3,7 +3,7 @@
 // servidor — nunca chegam ao navegador do visitante da landing page.
 
 const BASE_URL =
-  process.env.LUCROMAIS_BASE_URL || 'https://lucro-mais-backend.vercel.app/api'
+  process.env.LUCROMAIS_BASE_URL || 'https://lucromais-backend-mssolucoes.vercel.app/api'
 
 let cachedToken = null
 let cachedTokenExpiresAt = 0
@@ -84,6 +84,19 @@ export async function lucroMaisFetch(path, options = {}) {
   }
 
   return response
+}
+
+// A landing pública da Sky usa o escopo resolvido pelo backend. O slug da
+// unidade fica na URL pública e não depende das credenciais internas.
+export async function skyPublicFetch(unidadeSlug = 'principal', resource = '', options = {}) {
+  const slug = encodeURIComponent(unidadeSlug || 'principal')
+  return fetch(`${BASE_URL}/public/agendamentos/sky-barbearia/${slug}${resource}`, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  })
 }
 
 export function sendJson(res, status, body) {

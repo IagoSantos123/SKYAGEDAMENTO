@@ -2,6 +2,7 @@ export const MESSAGES = {
   welcomeGreeting: 'Olá! Será um prazer realizar seu agendamento.',
   welcomeSub:
     'Vou precisar de apenas algumas informações e isso leva menos de 1 minuto.',
+  unitPrompt: 'Como você deseja agendar?',
   professionalPrompt: 'Com quem você deseja agendar?',
   servicePraise: 'Excelente escolha!',
   servicePrompt: 'Agora selecione o serviço desejado.',
