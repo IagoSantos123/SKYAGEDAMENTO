@@ -8,13 +8,15 @@ import { formatCurrency } from '../../utils/formatters'
 import ReceptionistMessage from '../common/ReceptionistMessage'
 import SelectableCard from '../common/SelectableCard'
 
-export default function ServiceStep({ unitSlug, selected, onSelect }) {
+export default function ServiceStep({ unitSlug, professionalId, selected, onSelect }) {
   const [services, setServices] = useState([])
   const [status, setStatus] = useState('loading') // loading | ready | error
 
   useEffect(() => {
     let active = true
-    getServices({ unidadeSlug: unitSlug })
+    setServices([])
+    setStatus('loading')
+    getServices({ unidadeSlug: unitSlug, colaboradorId: professionalId })
       .then((data) => {
         if (!active) return
         setServices(data)
@@ -27,7 +29,7 @@ export default function ServiceStep({ unitSlug, selected, onSelect }) {
     return () => {
       active = false
     }
-  }, [unitSlug])
+  }, [unitSlug, professionalId])
 
   return (
     <Box>

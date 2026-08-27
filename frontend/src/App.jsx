@@ -86,6 +86,7 @@ export default function App() {
         return (
           <ServiceStep
             unitSlug={flow.bookingData.unit?.id}
+            professionalId={flow.bookingData.professional?.id}
             selected={flow.bookingData.service}
             onSelect={flow.selectService}
           />

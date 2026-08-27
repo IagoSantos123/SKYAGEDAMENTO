@@ -18,9 +18,9 @@ export async function getProfessionals({ unidadeSlug } = {}) {
   }
 }
 
-export async function getServices({ unidadeSlug } = {}) {
+export async function getServices({ unidadeSlug, colaboradorId } = {}) {
   try {
-    const { data } = await apiClient.get('/services', { params: { unidadeSlug } })
+    const { data } = await apiClient.get('/services', { params: { unidadeSlug, colaboradorId } })
     return data
   } catch (error) {
     throw new Error(extractErrorMessage(error, 'Não foi possível carregar os serviços.'))

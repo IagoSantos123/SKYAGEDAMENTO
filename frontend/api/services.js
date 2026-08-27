@@ -16,7 +16,11 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await skyPublicFetch(req.query.unidadeSlug, '/servicos')
+    const colaboradorId = req.query.colaboradorId
+    const query = colaboradorId
+      ? `?colaboradorId=${encodeURIComponent(colaboradorId)}`
+      : ''
+    const response = await skyPublicFetch(req.query.unidadeSlug, `/servicos${query}`)
     if (!response.ok) {
       return res.status(502).json({ error: 'Não foi possível carregar os serviços.' })
     }

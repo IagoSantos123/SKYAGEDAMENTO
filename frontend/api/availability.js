@@ -74,7 +74,10 @@ export default async function handler(req, res) {
         unidadeSlug,
         `/agendamentos?inicio=${data}&fim=${data}&colaboradorId=${encodeURIComponent(colaboradorId)}`
       ),
-      skyPublicFetch(unidadeSlug, '/servicos'),
+      skyPublicFetch(
+        unidadeSlug,
+        `/servicos?colaboradorId=${encodeURIComponent(colaboradorId)}`
+      ),
     ])
 
     if (!agendamentosRes.ok || !servicosRes.ok) {
