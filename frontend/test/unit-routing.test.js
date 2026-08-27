@@ -1,9 +1,15 @@
 import assert from 'node:assert/strict'
+import fs from 'node:fs'
+import path from 'node:path'
 import test from 'node:test'
+import { fileURLToPath } from 'node:url'
 
 import availabilityHandler from '../api/availability.js'
 import bookingsHandler from '../api/bookings.js'
 import servicesHandler from '../api/services.js'
+
+const frontendDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
+const read = (relativePath) => fs.readFileSync(path.join(frontendDir, relativePath), 'utf8')
 
 function responseRecorder() {
   return {
@@ -106,4 +112,14 @@ test('criação do agendamento usa a unidade da URL pública', async () => {
   } finally {
     global.fetch = originalFetch
   }
+})
+
+test('cards e resumo usam foto e enquadramento cadastrados no LucroMais', () => {
+  const professionalStep = read('src/components/steps/ProfessionalStep.jsx')
+  const summaryStep = read('src/components/steps/SummaryStep.jsx')
+
+  assert.match(professionalStep, /src=\{professional\.avatarUrl \|\| undefined\}/)
+  assert.match(professionalStep, /professional\.avatarPosition \|\| '50% 50%'/)
+  assert.match(summaryStep, /src=\{professional\?\.avatarUrl \|\| undefined\}/)
+  assert.match(summaryStep, /professional\?\.avatarPosition \|\| '50% 50%'/)
 })

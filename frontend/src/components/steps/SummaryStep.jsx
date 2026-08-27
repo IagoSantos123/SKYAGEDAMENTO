@@ -70,6 +70,14 @@ export default function SummaryStep({ bookingData, onConfirm, submitting, error 
       >
         <Stack direction="row" spacing={2} sx={{ alignItems: 'center', mb: 2.5 }}>
           <Avatar
+            src={professional?.avatarUrl || undefined}
+            alt={professional?.name ? `Foto de ${professional.name}` : 'Profissional'}
+            imgProps={{
+              style: {
+                objectFit: 'cover',
+                objectPosition: professional?.avatarPosition || '50% 50%',
+              },
+            }}
             sx={{
               width: 56,
               height: 56,
@@ -79,7 +87,7 @@ export default function SummaryStep({ bookingData, onConfirm, submitting, error 
               border: '2px solid rgba(198,161,91,0.4)',
             }}
           >
-            {professional?.name?.[0]?.toUpperCase()}
+            {!professional?.avatarUrl && professional?.name?.[0]?.toUpperCase()}
           </Avatar>
           <Box>
             <Typography variant="h6" sx={{ color: '#fff' }}>
