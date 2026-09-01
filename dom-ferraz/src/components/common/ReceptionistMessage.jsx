@@ -1,5 +1,5 @@
 import { Avatar, Box, Stack, Typography } from '@mui/material'
-import logo from '../../assets/logo-dom-ferraz.svg'
+import logo from '../../assets/logo-dom-ferraz.png'
 
 /**
  * Bolha de mensagem da "recepcionista virtual", usada no topo de cada etapa

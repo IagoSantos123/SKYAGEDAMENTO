@@ -6,7 +6,7 @@ import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined'
 import HandshakeOutlinedIcon from '@mui/icons-material/HandshakeOutlined'
 import InstagramIcon from '@mui/icons-material/Instagram'
 import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined'
-import logo from '../../assets/logo-dom-ferraz.svg'
+import logo from '../../assets/logo-dom-ferraz.png'
 import heroImage from '../../assets/hero-dom-ferraz-v2.png'
 import experienceImage from '../../assets/experiencia-dom-ferraz.jpeg'
 

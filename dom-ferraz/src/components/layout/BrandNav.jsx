@@ -1,6 +1,6 @@
 import { Box, Button, Stack } from '@mui/material'
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined'
-import logo from '../../assets/logo-dom-ferraz.svg'
+import logo from '../../assets/logo-dom-ferraz.png'
 
 export default function BrandNav() {
   const goTo = (id) => document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' })
