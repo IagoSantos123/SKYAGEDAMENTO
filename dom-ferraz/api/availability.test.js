@@ -25,6 +25,13 @@ test('disponibilidade da Dom Ferraz consome a grade central de 40 minutos', asyn
     if (String(url).includes('/agendamentos/servicos')) {
       return { ok: true, status: 200, json: async () => [{ id: 'corte', duracaoMin: 30 }] }
     }
+    if (String(url).includes('/agendamentos/bloqueios')) {
+      return {
+        ok: true,
+        status: 200,
+        json: async () => [{ colaboradorId: '1', diaInteiro: false, horaInicio: '15:00', horaFim: '19:00' }],
+      }
+    }
     return { ok: true, status: 200, json: async () => [] }
   }
 
@@ -48,5 +55,8 @@ test('disponibilidade da Dom Ferraz consome a grade central de 40 minutos', asyn
   assert.equal(body.slotStepMinutes, 40)
   assert.deepEqual(body.slots.slice(0, 3).map((slot) => slot.time), ['08:20', '09:00', '09:40'])
   assert.equal(body.slots.some((slot) => slot.time === '09:30'), false)
+  assert.equal(body.slots.find((slot) => slot.time === '14:20').available, true)
+  assert.equal(body.slots.find((slot) => slot.time === '15:00').available, false)
+  assert.equal(body.slots.find((slot) => slot.time === '17:40').available, false)
   assert.equal(urls.some((url) => url.endsWith('/agendamentos/configuracao')), true)
 })

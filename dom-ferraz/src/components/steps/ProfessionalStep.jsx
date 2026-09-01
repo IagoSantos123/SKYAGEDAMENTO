@@ -71,6 +71,13 @@ export default function ProfessionalStep({ selected, unit, date, onSelect }) {
                 <SelectableCard selected={isSelected} onClick={() => onSelect(professional)}>
                   <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
                     <Avatar
+                      src={professional.avatarUrl || undefined}
+                      imgProps={{
+                        style: {
+                          objectFit: 'cover',
+                          objectPosition: professional.avatarPosition || '50% 50%',
+                        },
+                      }}
                       sx={{
                         width: 56,
                         height: 56,
@@ -80,7 +87,7 @@ export default function ProfessionalStep({ selected, unit, date, onSelect }) {
                         border: '2px solid rgba(173,177,184,0.35)',
                       }}
                     >
-                      {initials(professional.name)}
+                      {!professional.avatarUrl && initials(professional.name)}
                     </Avatar>
                     <Typography variant="h6" noWrap>
                       {professional.name}

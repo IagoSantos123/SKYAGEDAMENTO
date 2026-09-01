@@ -86,7 +86,10 @@ export default async function handler(req, res) {
     }
 
     const blocks = await blocksRes.json()
-    if (blocks.length > 0) {
+    const fullDayBlock = blocks.some(
+      (block) => block.diaInteiro || (!block.horaInicio && !block.horaFim)
+    )
+    if (fullDayBlock) {
       return res.status(200).json({ closed: true, reason: 'blocked', slots: [] })
     }
 
@@ -111,6 +114,13 @@ export default async function handler(req, res) {
         return [start, start + duration]
       })
 
+    const blockedIntervals = blocks
+      .map((block) => [
+        toMinutes(block.horaInicio || block.hora_inicio || ''),
+        toMinutes(block.horaFim || block.hora_fim || ''),
+      ])
+      .filter(([start, end]) => Number.isFinite(start) && Number.isFinite(end) && start < end)
+
     const isToday = data === now.dateString
 
     const slots = []
@@ -123,10 +133,13 @@ export default async function handler(req, res) {
       const overlapsBooking = busyIntervals.some(
         ([busyStart, busyEnd]) => start < busyEnd && end > busyStart
       )
+      const overlapsBlock = blockedIntervals.some(
+        ([blockStart, blockEnd]) => start < blockEnd && end > blockStart
+      )
       const isPastTime = isToday && start <= now.minutesSinceMidnight
       slots.push({
         time: toHHMM(start),
-        available: !overlapsBooking && !isPastTime,
+        available: !overlapsBooking && !overlapsBlock && !isPastTime,
       })
     }
 

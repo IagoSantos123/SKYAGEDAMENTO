@@ -25,7 +25,13 @@ export default async function handler(req, res) {
 
     const colaboradores = await response.json()
     const blocks = blocksResponse ? await blocksResponse.json() : []
-    const blockedIds = new Set(blocks.map((block) => String(block.colaboradorId)))
+    // Bloqueios parciais não retiram o profissional da escolha: eles apenas
+    // desabilitam os horários correspondentes na etapa de disponibilidade.
+    const blockedIds = new Set(
+      blocks
+        .filter((block) => block.diaInteiro || (!block.horaInicio && !block.horaFim))
+        .map((block) => String(block.colaboradorId))
+    )
     const professionals = colaboradores
       .filter((c) => !blockedIds.has(String(c.id)))
       .slice()
@@ -34,6 +40,8 @@ export default async function handler(req, res) {
         id: c.id,
         name: c.usuarioNome,
         color: c.cor || '#C6A15B',
+        avatarUrl: c.avatarUrl || c.avatar_url || null,
+        avatarPosition: c.avatarPosition || c.avatar_position || '50% 50%',
       }))
 
     return res.status(200).json(professionals)
