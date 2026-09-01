@@ -19,7 +19,7 @@ test('disponibilidade da Dom Ferraz consome a grade central de 40 minutos', asyn
       return {
         ok: true,
         status: 200,
-        json: async () => ({ horaInicio: '09:00', horaFim: '19:00', intervaloMin: 40 }),
+        json: async () => ({ horaInicio: '08:20', horaFim: '18:20', intervaloMin: 40 }),
       }
     }
     if (String(url).includes('/agendamentos/servicos')) {
@@ -46,7 +46,7 @@ test('disponibilidade da Dom Ferraz consome a grade central de 40 minutos', asyn
   assert.equal(statusCode, 200)
   assert.equal(body.closed, false)
   assert.equal(body.slotStepMinutes, 40)
-  assert.deepEqual(body.slots.slice(0, 3).map((slot) => slot.time), ['09:00', '09:40', '10:20'])
+  assert.deepEqual(body.slots.slice(0, 3).map((slot) => slot.time), ['08:20', '09:00', '09:40'])
   assert.equal(body.slots.some((slot) => slot.time === '09:30'), false)
   assert.equal(urls.some((url) => url.endsWith('/agendamentos/configuracao')), true)
 })
