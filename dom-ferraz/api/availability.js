@@ -1,13 +1,12 @@
 import { getUnitId, lucroMaisFetch } from './_lucromais.js'
 
-// Regra inicial da Barbearia Dom Ferraz: Segunda a Sábado, 09:00-19:00.
-// A API do LucroMais não expõe horário de funcionamento nem disponibilidade
-// pronta — só valida conflito no POST — então calculamos aqui.
-const OPENING_MINUTES = 9 * 60
-const CLOSING_MINUTES = 19 * 60
-const SLOT_STEP_MINUTES = 30
+// Valores de segurança usados somente durante uma atualização ou indisponibilidade
+// momentânea da configuração central do Lucro+. A fonte principal é /configuracao.
+const DEFAULT_OPENING_MINUTES = 9 * 60
+const DEFAULT_CLOSING_MINUTES = 19 * 60
+const DEFAULT_SLOT_STEP_MINUTES = 40
 const DEFAULT_SERVICE_DURATION = 30
-const TIME_ZONE = 'America/Sao_Paulo'
+const TIME_ZONE = 'America/Fortaleza'
 
 function toMinutes(hhmm) {
   const [h, m] = hhmm.split(':').map(Number)
@@ -71,7 +70,7 @@ export default async function handler(req, res) {
   try {
     const unitId = getUnitId(req)
     if (!unitId) return res.status(400).json({ error: 'Unidade inválida ou não informada.' })
-    const [agendamentosRes, servicosRes, blocksRes] = await Promise.all([
+    const [agendamentosRes, servicosRes, blocksRes, configuracaoRes] = await Promise.all([
       lucroMaisFetch(unitId,
         `/agendamentos?inicio=${data}&fim=${data}&colaboradorId=${encodeURIComponent(colaboradorId)}`
       ),
@@ -79,6 +78,7 @@ export default async function handler(req, res) {
       lucroMaisFetch(unitId,
         `/agendamentos/bloqueios?data=${encodeURIComponent(data)}&colaboradorId=${encodeURIComponent(colaboradorId)}`
       ),
+      lucroMaisFetch(unitId, '/agendamentos/configuracao'),
     ])
 
     if (!agendamentosRes.ok || !servicosRes.ok || !blocksRes.ok) {
@@ -92,6 +92,12 @@ export default async function handler(req, res) {
 
     const agendamentos = await agendamentosRes.json()
     const servicos = await servicosRes.json()
+    const configuracao = configuracaoRes.ok ? await configuracaoRes.json() : {}
+    const openingMinutes = toMinutes(configuracao.horaInicio || '09:00') || DEFAULT_OPENING_MINUTES
+    const closingMinutes = toMinutes(configuracao.horaFim || '19:00') || DEFAULT_CLOSING_MINUTES
+    const slotStepMinutes = Number(configuracao.intervaloMin) > 0
+      ? Number(configuracao.intervaloMin)
+      : DEFAULT_SLOT_STEP_MINUTES
     const durationById = new Map(servicos.map((s) => [s.id, s.duracaoMin]))
 
     const requestedDuration =
@@ -109,9 +115,9 @@ export default async function handler(req, res) {
 
     const slots = []
     for (
-      let start = OPENING_MINUTES;
-      start + requestedDuration <= CLOSING_MINUTES;
-      start += SLOT_STEP_MINUTES
+      let start = openingMinutes;
+      start + requestedDuration <= closingMinutes;
+      start += slotStepMinutes
     ) {
       const end = start + requestedDuration
       const overlapsBooking = busyIntervals.some(
@@ -124,7 +130,7 @@ export default async function handler(req, res) {
       })
     }
 
-    return res.status(200).json({ closed: false, slots })
+    return res.status(200).json({ closed: false, slotStepMinutes, slots })
   } catch (error) {
     console.error('[api/availability]', error)
     return res.status(500).json({ error: 'Erro interno ao calcular disponibilidade.' })
