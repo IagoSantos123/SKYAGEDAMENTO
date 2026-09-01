@@ -1,11 +1,10 @@
 import { skyPublicFetch } from './_lucromais.js'
 
-// Regra de negócio da SKY BARBEARIA: Segunda a Sábado, 09:00-19:00.
-// A API do LucroMais não expõe horário de funcionamento nem disponibilidade
-// pronta — só valida conflito no POST — então calculamos aqui.
-const OPENING_MINUTES = 9 * 60
-const CLOSING_MINUTES = 19 * 60
-const SLOT_STEP_MINUTES = 30
+// Valores de segurança usados somente se a configuração central estiver
+// momentaneamente indisponível. A fonte principal é o LucroMais.
+const DEFAULT_OPENING_MINUTES = 9 * 60
+const DEFAULT_CLOSING_MINUTES = 19 * 60
+const DEFAULT_SLOT_STEP_MINUTES = 30
 const DEFAULT_SERVICE_DURATION = 30
 const TIME_ZONE = 'America/Sao_Paulo'
 
@@ -24,9 +23,9 @@ function isValidDateString(value) {
   return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)
 }
 
-function getNowInTimeZone() {
+function getNowInTimeZone(timeZone = TIME_ZONE) {
   const parts = new Intl.DateTimeFormat('en-US', {
-    timeZone: TIME_ZONE,
+    timeZone,
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
@@ -60,16 +59,12 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Parâmetros colaboradorId e data (YYYY-MM-DD) são obrigatórios.' })
   }
 
-  const weekday = getWeekday(data)
-  const now = getNowInTimeZone()
-  const isPastDate = data < now.dateString
-
-  if (weekday === 0 || isPastDate) {
+  if (getWeekday(data) === 0) {
     return res.status(200).json({ closed: true, slots: [] })
   }
 
   try {
-    const [agendamentosRes, servicosRes] = await Promise.all([
+    const [agendamentosRes, servicosRes, configuracaoRes] = await Promise.all([
       skyPublicFetch(
         unidadeSlug,
         `/agendamentos?inicio=${data}&fim=${data}&colaboradorId=${encodeURIComponent(colaboradorId)}`
@@ -78,6 +73,7 @@ export default async function handler(req, res) {
         unidadeSlug,
         `/servicos?colaboradorId=${encodeURIComponent(colaboradorId)}`
       ),
+      skyPublicFetch(unidadeSlug, '/configuracao'),
     ])
 
     if (!agendamentosRes.ok || !servicosRes.ok) {
@@ -86,6 +82,19 @@ export default async function handler(req, res) {
 
     const agendamentos = await agendamentosRes.json()
     const servicos = await servicosRes.json()
+    const configuracao = configuracaoRes.ok ? await configuracaoRes.json() : {}
+    const openingMinutes = toMinutes(configuracao.horaInicio || '09:00') || DEFAULT_OPENING_MINUTES
+    const closingMinutes = toMinutes(configuracao.horaFim || '19:00') || DEFAULT_CLOSING_MINUTES
+    const slotStepMinutes = Number(configuracao.intervaloMin) > 0
+      ? Number(configuracao.intervaloMin)
+      : DEFAULT_SLOT_STEP_MINUTES
+    const now = getNowInTimeZone(configuracao.timeZone || TIME_ZONE)
+    const isPastDate = data < now.dateString
+
+    if (isPastDate) {
+      return res.status(200).json({ closed: true, slots: [] })
+    }
+
     const durationById = new Map(servicos.map((s) => [String(s.id), s.duration]))
 
     const requestedDuration =
@@ -103,9 +112,9 @@ export default async function handler(req, res) {
 
     const slots = []
     for (
-      let start = OPENING_MINUTES;
-      start + requestedDuration <= CLOSING_MINUTES;
-      start += SLOT_STEP_MINUTES
+      let start = openingMinutes;
+      start + requestedDuration <= closingMinutes;
+      start += slotStepMinutes
     ) {
       const end = start + requestedDuration
       const overlapsBooking = busyIntervals.some(
@@ -118,7 +127,7 @@ export default async function handler(req, res) {
       })
     }
 
-    return res.status(200).json({ closed: false, slots })
+    return res.status(200).json({ closed: false, slotStepMinutes, slots })
   } catch (error) {
     console.error('[api/availability]', error)
     return res.status(500).json({ error: 'Erro interno ao calcular disponibilidade.' })

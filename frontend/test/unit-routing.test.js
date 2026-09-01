@@ -53,6 +53,12 @@ test('disponibilidade consulta agenda e duração dentro do mesmo fluxo', async 
   const urls = []
   global.fetch = async (url) => {
     urls.push(String(url))
+    if (String(url).endsWith('/configuracao')) {
+      return {
+        ok: true,
+        json: async () => ({ horaInicio: '08:00', horaFim: '18:00', intervaloMin: 40, timeZone: 'America/Fortaleza' }),
+      }
+    }
     if (String(url).includes('/agendamentos?')) {
       return { ok: true, json: async () => [] }
     }
@@ -73,6 +79,9 @@ test('disponibilidade consulta agenda e duração dentro do mesmo fluxo', async 
     assert.equal(res.statusCode, 200)
     assert.ok(urls.every((url) => url.includes('/sky-barbearia/suzane/')))
     assert.ok(urls.some((url) => url.endsWith('/servicos?colaboradorId=44')))
+    assert.ok(urls.some((url) => url.endsWith('/configuracao')))
+    assert.equal(res.body.slotStepMinutes, 40)
+    assert.deepEqual(res.body.slots.slice(0, 3).map((slot) => slot.time), ['08:00', '08:40', '09:20'])
   } finally {
     global.fetch = originalFetch
   }
