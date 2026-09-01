@@ -8,12 +8,19 @@ process.env.LUCROMAIS_MANAIRA_SENHA = 'segredo'
 const jwtPayload = Buffer.from(JSON.stringify({ exp: Math.floor(Date.now() / 1000) + 3600 })).toString('base64url')
 const token = `header.${jwtPayload}.signature`
 
-test('disponibilidade da Dom Ferraz permanece entre 09h e 19h de 30 em 30 minutos', async () => {
+test('disponibilidade da Dom Ferraz consome a grade central de 40 minutos', async () => {
   const urls = []
   global.fetch = async (url) => {
     urls.push(String(url))
     if (String(url).endsWith('/auth/login')) {
       return { ok: true, status: 200, json: async () => ({ token }) }
+    }
+    if (String(url).endsWith('/agendamentos/configuracao')) {
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({ horaInicio: '08:20', horaFim: '18:20', intervaloMin: 40 }),
+      }
     }
     if (String(url).includes('/agendamentos/servicos')) {
       return { ok: true, status: 200, json: async () => [{ id: 'corte', duracaoMin: 30 }] }
@@ -38,7 +45,8 @@ test('disponibilidade da Dom Ferraz permanece entre 09h e 19h de 30 em 30 minuto
 
   assert.equal(statusCode, 200)
   assert.equal(body.closed, false)
-  assert.deepEqual(body.slots.slice(0, 3).map((slot) => slot.time), ['09:00', '09:30', '10:00'])
-  assert.equal(body.slots.at(-1).time, '18:30')
-  assert.equal(urls.some((url) => url.endsWith('/agendamentos/configuracao')), false)
+  assert.equal(body.slotStepMinutes, 40)
+  assert.deepEqual(body.slots.slice(0, 3).map((slot) => slot.time), ['08:20', '09:00', '09:40'])
+  assert.equal(body.slots.some((slot) => slot.time === '09:30'), false)
+  assert.equal(urls.some((url) => url.endsWith('/agendamentos/configuracao')), true)
 })
