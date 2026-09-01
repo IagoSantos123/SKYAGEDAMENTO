@@ -62,7 +62,13 @@ test('disponibilidade consulta agenda e duração dentro do mesmo fluxo', async 
     if (String(url).includes('/agendamentos?')) {
       return { ok: true, json: async () => [] }
     }
-    return { ok: true, json: async () => [{ id: 'srv_suzane', duration: 60 }] }
+    return {
+      ok: true,
+      json: async () => [
+        { id: 'srv_suzane', duration: 60 },
+        { id: 'srv_acabamento', duration: 30 },
+      ],
+    }
   }
 
   try {
@@ -72,7 +78,7 @@ test('disponibilidade consulta agenda e duração dentro do mesmo fluxo', async 
       query: {
         unidadeSlug: 'suzane',
         colaboradorId: '44',
-        servicoId: 'srv_suzane',
+        servicoIds: 'srv_suzane,srv_acabamento',
         data: '2099-08-27',
       },
     }, res)
@@ -82,6 +88,7 @@ test('disponibilidade consulta agenda e duração dentro do mesmo fluxo', async 
     assert.ok(urls.some((url) => url.endsWith('/configuracao')))
     assert.equal(res.body.slotStepMinutes, 40)
     assert.deepEqual(res.body.slots.slice(0, 3).map((slot) => slot.time), ['08:00', '08:40', '09:20'])
+    assert.equal(res.body.slots.at(-1).time, '16:00')
   } finally {
     global.fetch = originalFetch
   }
@@ -109,6 +116,8 @@ test('criação do agendamento usa a unidade da URL pública', async () => {
         unidadeSlug: 'suzane',
         colaboradorId: '44',
         servicoId: 'srv_suzane',
+        servicoIds: ['srv_suzane', 'srv_acabamento'],
+        servicos: [{ id: 'srv_suzane' }, { id: 'srv_acabamento' }],
         clienteNome: 'Cliente Teste',
         data: '2099-08-27',
         horario: '10:00',
@@ -117,6 +126,7 @@ test('criação do agendamento usa a unidade da URL pública', async () => {
     assert.equal(res.statusCode, 201)
     assert.match(calledUrl, /\/sky-barbearia\/suzane\/agendamentos$/)
     assert.equal(calledBody.status, 'aguardando')
+    assert.deepEqual(calledBody.servicoIds, ['srv_suzane', 'srv_acabamento'])
     assert.equal(calledBody.unidadeId, undefined)
   } finally {
     global.fetch = originalFetch

@@ -27,7 +27,7 @@ export default function App() {
   const [submitError, setSubmitError] = useState(null)
 
   const handleConfirmBooking = async () => {
-    const { unit, professional, service, date, time, notes, client, clientType } = flow.bookingData
+    const { unit, professional, services, date, time, notes, client, clientType } = flow.bookingData
 
     setSubmitError(null)
     setSubmitting(true)
@@ -35,8 +35,10 @@ export default function App() {
       await createBooking({
         unidadeSlug: unit?.id,
         colaboradorId: professional?.id,
-        servicoId: service?.id,
-        servicoNome: service?.name,
+        servicoId: services?.[0]?.id,
+        servicoIds: services?.map((service) => service.id),
+        servicos: services,
+        servicoNome: services?.map((service) => service.name).join(' + '),
         data: dayjs(date).format('YYYY-MM-DD'),
         horario: time,
         clienteId: clientType === 'existing' ? client?.id : undefined,
@@ -87,8 +89,9 @@ export default function App() {
           <ServiceStep
             unitSlug={flow.bookingData.unit?.id}
             professionalId={flow.bookingData.professional?.id}
-            selected={flow.bookingData.service}
-            onSelect={flow.selectService}
+            selected={flow.bookingData.services}
+            onSelect={flow.selectServices}
+            onContinue={flow.continueServices}
           />
         )
 
@@ -105,7 +108,7 @@ export default function App() {
           <TimeStep
             unitSlug={flow.bookingData.unit?.id}
             professionalId={flow.bookingData.professional?.id}
-            serviceId={flow.bookingData.service?.id}
+            serviceIds={flow.bookingData.services?.map((service) => service.id)}
             date={flow.bookingData.date}
             selected={flow.bookingData.time}
             onSelect={flow.selectTime}

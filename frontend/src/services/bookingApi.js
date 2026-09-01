@@ -27,10 +27,10 @@ export async function getServices({ unidadeSlug, colaboradorId } = {}) {
   }
 }
 
-export async function getAvailability({ unidadeSlug, colaboradorId, servicoId, date }) {
+export async function getAvailability({ unidadeSlug, colaboradorId, servicoIds, date }) {
   try {
     const { data } = await apiClient.get('/availability', {
-      params: { unidadeSlug, colaboradorId, servicoId, data: date },
+      params: { unidadeSlug, colaboradorId, servicoIds: (servicoIds || []).join(','), data: date },
     })
     return data
   } catch (error) {

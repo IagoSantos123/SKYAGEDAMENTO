@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Alert, Box, CircularProgress, Grid, Stack, Typography } from '@mui/material'
+import { Alert, Box, Button, CircularProgress, Grid, Stack, Typography } from '@mui/material'
 import ScheduleRoundedIcon from '@mui/icons-material/ScheduleRounded'
 import ContentCutRoundedIcon from '@mui/icons-material/ContentCutRounded'
 import { getServices } from '../../services/bookingApi'
@@ -8,7 +8,7 @@ import { formatCurrency } from '../../utils/formatters'
 import ReceptionistMessage from '../common/ReceptionistMessage'
 import SelectableCard from '../common/SelectableCard'
 
-export default function ServiceStep({ unitSlug, professionalId, selected, onSelect }) {
+export default function ServiceStep({ unitSlug, professionalId, selected = [], onSelect, onContinue }) {
   const [services, setServices] = useState([])
   const [status, setStatus] = useState('loading') // loading | ready | error
 
@@ -55,13 +55,20 @@ export default function ServiceStep({ unitSlug, professionalId, selected, onSele
       )}
 
       {status === 'ready' && services.length > 0 && (
-        <Grid container spacing={2.5}>
-          {services.map((service) => (
-            <Grid size={{ xs: 12, sm: 6 }} key={service.id}>
-              <SelectableCard
-                selected={selected?.id === service.id}
-                onClick={() => onSelect(service)}
-              >
+        <Stack spacing={3}>
+          <Grid container spacing={2.5}>
+            {services.map((service) => {
+              const isSelected = selected.some((item) => String(item.id) === String(service.id))
+              return (
+                <Grid size={{ xs: 12, sm: 6 }} key={service.id}>
+                  <SelectableCard
+                    selected={isSelected}
+                    onClick={() => onSelect(
+                      isSelected
+                        ? selected.filter((item) => String(item.id) !== String(service.id))
+                        : [...selected, service]
+                    )}
+                  >
                 <Stack
                   direction="row"
                   sx={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
@@ -103,10 +110,21 @@ export default function ServiceStep({ unitSlug, professionalId, selected, onSele
                     {service.durationLabel}
                   </Typography>
                 </Stack>
-              </SelectableCard>
-            </Grid>
-          ))}
-        </Grid>
+                  </SelectableCard>
+                </Grid>
+              )
+            })}
+          </Grid>
+          <Button
+            variant="contained"
+            color="secondary"
+            size="large"
+            disabled={selected.length === 0}
+            onClick={onContinue}
+          >
+            Continuar com {selected.length} {selected.length === 1 ? 'serviço' : 'serviços'}
+          </Button>
+        </Stack>
       )}
     </Box>
   )

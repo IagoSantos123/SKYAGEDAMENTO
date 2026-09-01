@@ -53,7 +53,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Método não permitido' })
   }
 
-  const { unidadeSlug, colaboradorId, data, servicoId } = req.query
+  const { unidadeSlug, colaboradorId, data, servicoId, servicoIds } = req.query
 
   if (!colaboradorId || !isValidDateString(data)) {
     return res.status(400).json({ error: 'Parâmetros colaboradorId e data (YYYY-MM-DD) são obrigatórios.' })
@@ -97,14 +97,30 @@ export default async function handler(req, res) {
 
     const durationById = new Map(servicos.map((s) => [String(s.id), s.duration]))
 
-    const requestedDuration =
-      (servicoId && durationById.get(String(servicoId))) || DEFAULT_SERVICE_DURATION
+    const requestedIds = String(servicoIds || servicoId || '')
+      .split(',')
+      .map((id) => id.trim())
+      .filter(Boolean)
+    const requestedDuration = requestedIds.length
+      ? requestedIds.reduce(
+          (total, id) => total + Number(durationById.get(String(id)) || DEFAULT_SERVICE_DURATION),
+          0
+        )
+      : DEFAULT_SERVICE_DURATION
 
     const busyIntervals = agendamentos
       .filter((a) => a.status !== 'cancelado')
       .map((a) => {
         const start = toMinutes(a.horario)
-        const duration = durationById.get(String(a.servicoId)) || DEFAULT_SERVICE_DURATION
+        const duration = Number(a.servicoDuracaoMin)
+          || (Array.isArray(a.servicos)
+            ? a.servicos.reduce(
+                (total, service) => total + Number(service.duration || service.duracaoMin || 30),
+                0
+              )
+            : 0)
+          || durationById.get(String(a.servicoId))
+          || DEFAULT_SERVICE_DURATION
         return [start, start + duration]
       })
 

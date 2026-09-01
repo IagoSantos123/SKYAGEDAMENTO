@@ -24,6 +24,8 @@ export default async function handler(req, res) {
     clienteEmail,
     clienteNascimento,
     servicoId,
+    servicoIds,
+    servicos,
     servicoNome,
     observacao,
   } = req.body || {}
@@ -49,6 +51,8 @@ export default async function handler(req, res) {
         clienteEmail,
         clienteNascimento,
         servicoId,
+        servicoIds,
+        servicos,
         servicoNome,
         observacao,
         // Agendamento público entra sempre como pendente de confirmação —

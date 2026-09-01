@@ -5,10 +5,11 @@ import { getAvailability } from '../../services/bookingApi'
 import { MESSAGES } from '../../constants/messages'
 import ReceptionistMessage from '../common/ReceptionistMessage'
 
-export default function TimeStep({ unitId, professionalId, serviceId, date, selected, onSelect }) {
+export default function TimeStep({ unitId, professionalId, serviceIds, date, selected, onSelect }) {
   const [slots, setSlots] = useState([])
   const [closed, setClosed] = useState(false)
   const [status, setStatus] = useState('loading') // loading | ready | error
+  const serviceIdsKey = (serviceIds || []).join(',')
 
   useEffect(() => {
     if (!professionalId || !date) return undefined
@@ -19,7 +20,7 @@ export default function TimeStep({ unitId, professionalId, serviceId, date, sele
     getAvailability({
       unitId,
       colaboradorId: professionalId,
-      servicoId: serviceId,
+      servicoIds: serviceIdsKey.split(',').filter(Boolean),
       date: dayjs(date).format('YYYY-MM-DD'),
     })
       .then((data) => {
@@ -35,7 +36,7 @@ export default function TimeStep({ unitId, professionalId, serviceId, date, sele
     return () => {
       active = false
     }
-  }, [unitId, professionalId, serviceId, date])
+  }, [unitId, professionalId, serviceIdsKey, date])
 
   return (
     <Box>

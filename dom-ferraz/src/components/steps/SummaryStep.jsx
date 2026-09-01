@@ -40,7 +40,10 @@ function SummaryRow({ icon, label, value }) {
 }
 
 export default function SummaryStep({ bookingData, onConfirm, submitting, error }) {
-  const { unit, professional, service, date, time, notes, client } = bookingData
+  const { unit, professional, services = [], date, time, notes, client } = bookingData
+  const serviceNames = services.map((service) => service.name).join(' + ')
+  const totalPrice = services.reduce((total, service) => total + Number(service.price || 0), 0)
+  const totalDuration = services.reduce((total, service) => total + Number(service.duration || 30), 0)
 
   return (
     <Box>
@@ -86,7 +89,7 @@ export default function SummaryStep({ bookingData, onConfirm, submitting, error 
               {professional?.name}
             </Typography>
             <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.6)' }}>
-              {service?.name} · {formatCurrency(service?.price || 0)}
+              {serviceNames} · {formatCurrency(totalPrice)} · {totalDuration} min
             </Typography>
           </Box>
         </Stack>

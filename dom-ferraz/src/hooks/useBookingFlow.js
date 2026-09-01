@@ -4,7 +4,7 @@ import { STEPS, PROGRESS_STEPS } from '../constants/steps'
 const initialBookingData = {
   unit: null,
   professional: null,
-  service: null,
+  services: [],
   date: null,
   time: null,
   notes: '',
@@ -41,7 +41,7 @@ export function useBookingFlow() {
 
   const selectUnit = useCallback(
     (unit) => {
-      updateBooking({ unit, professional: null, service: null, date: null, time: null })
+      updateBooking({ unit, professional: null, services: [], date: null, time: null })
       goTo(STEPS.DATE)
     },
     [goTo, updateBooking]
@@ -49,23 +49,24 @@ export function useBookingFlow() {
 
   const selectProfessional = useCallback(
     (professional) => {
-      updateBooking({ professional, service: null, time: null })
+      updateBooking({ professional, services: [], time: null })
       goTo(STEPS.SERVICE)
     },
     [goTo, updateBooking]
   )
 
-  const selectService = useCallback(
-    (service) => {
-      updateBooking({ service, time: null })
-      goTo(STEPS.TIME)
+  const selectServices = useCallback(
+    (services) => {
+      updateBooking({ services, time: null })
     },
-    [goTo, updateBooking]
+    [updateBooking]
   )
+
+  const continueServices = useCallback(() => goTo(STEPS.TIME), [goTo])
 
   const selectDate = useCallback(
     (date) => {
-      updateBooking({ date, professional: null, service: null, time: null })
+      updateBooking({ date, professional: null, services: [], time: null })
       goTo(STEPS.PROFESSIONAL)
     },
     [goTo, updateBooking]
@@ -138,7 +139,8 @@ export function useBookingFlow() {
     goTo,
     selectUnit,
     selectProfessional,
-    selectService,
+    selectServices,
+    continueServices,
     selectDate,
     selectTime,
     submitNotes,
