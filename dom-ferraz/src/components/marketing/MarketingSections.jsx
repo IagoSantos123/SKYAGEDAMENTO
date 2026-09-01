@@ -86,7 +86,12 @@ export default function MarketingSections() {
       </Stack>
 
       <Grid component="footer" container spacing={4} sx={{ py: 5, alignItems: 'flex-start' }}>
-        <Grid size={{ xs: 12, md: 3 }}><Box component="img" src={logo} alt="Dom Ferraz" sx={{ width: 130 }} /></Grid>
+        <Grid size={{ xs: 12, md: 3 }}>
+          <Box component="img" src={logo} alt="Dom Ferraz" sx={{ width: 130 }} />
+          <Typography variant="caption" sx={{ display: 'block', mt: 1.25, color: 'text.secondary' }}>
+            CNPJ: 48.636.600/0001-77
+          </Typography>
+        </Grid>
         <Grid size={{ xs: 6, md: 3 }}><Typography sx={{ fontWeight: 800, textTransform: 'uppercase', fontSize: '.75rem', mb: 1.5 }}>Navegação</Typography><Typography variant="caption" sx={{ display: 'block', lineHeight: 1.8 }}>Início<br />Serviços<br />Unidades<br />Galeria<br />Avaliações</Typography></Grid>
         <Grid size={{ xs: 6, md: 3 }}><Typography sx={{ fontWeight: 800, textTransform: 'uppercase', fontSize: '.75rem', mb: 1.5 }}>Contato</Typography><Stack direction="row" spacing={1}><PhoneOutlinedIcon sx={{ fontSize: 17 }} /><Typography variant="caption">(83) 9 9105-4631<br />(83) 9 9124-6737<br />@domferrazbarbershop</Typography></Stack></Grid>
         <Grid size={{ xs: 12, md: 3 }}><Typography sx={{ fontWeight: 800, textTransform: 'uppercase', fontSize: '.75rem', mb: 1.5 }}>Horário de funcionamento</Typography><Typography variant="caption" sx={{ lineHeight: 1.8 }}>Segunda a Sexta: 9h às 20h<br />Sábado: 8h às 19h<br />Domingo: Fechado</Typography></Grid>
